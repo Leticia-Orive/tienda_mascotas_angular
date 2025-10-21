@@ -1,0 +1,165 @@
+<div class="container mt-4">
+  <!-- Hero Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="bg-warning text-dark rounded p-5 text-center">
+        <i class="fas fa-collar fa-3x mb-3"></i>
+        <h1 class="display-4 mb-3">Accesorios Premium</h1>
+        <p class="lead">Todo lo que necesitas para el confort y estilo de tu mascota</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buscador -->
+  <div class="row mb-4">
+    <div class="col-md-8 mx-auto">
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="fas fa-search"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar collares, correas, camas, juguetes..."
+          [(ngModel)]="terminoBusqueda"
+          (input)="buscarProductos()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-warning" role="status">
+      <span class="visually-hidden">Cargando accesorios...</span>
+    </div>
+    <p class="mt-2">Cargando accesorios para mascotas...</p>
+  </div>
+
+  <!-- Productos -->
+  <div *ngIf="!isLoading">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2 class="text-center mb-4">
+          <i class="fas fa-tags me-2 text-warning"></i>
+          Accesorios Disponibles
+        </h2>
+        <p class="text-center text-muted">{{ productosFiltrados.length }} productos disponibles</p>
+      </div>
+    </div>
+
+    <!-- Sin productos -->
+    <div *ngIf="productosFiltrados.length === 0" class="row">
+      <div class="col-12">
+        <div class="alert alert-info text-center" role="alert">
+          <i class="fas fa-info-circle me-2"></i>
+          No se encontraron productos con ese término de búsqueda.
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div *ngFor="let producto of productosFiltrados" class="col-xl-4 col-md-6 mb-4">
+        <div class="card h-100 producto-card">
+          <!-- Imagen del producto -->
+          <div class="position-relative">
+            <img [src]="producto.imagen"
+                 [alt]="producto.nombre"
+                 class="card-img-top producto-image">
+
+            <!-- Badge de oferta -->
+            <span *ngIf="producto.enOferta"
+                  class="badge bg-danger position-absolute top-0 start-0 m-2">
+              <i class="fas fa-percentage me-1"></i>¡Oferta!
+            </span>
+
+            <!-- Badge de stock -->
+            <span class="badge position-absolute top-0 end-0 m-2"
+                  [class.bg-success]="producto.stock > 5"
+                  [class.bg-warning]="producto.stock <= 5 && producto.stock > 0"
+                  [class.bg-danger]="producto.stock === 0">
+              <i class="fas fa-boxes me-1"></i>
+              {{ producto.stock > 0 ? 'Disponible' : 'Agotado' }}
+            </span>
+          </div>
+
+          <div class="card-body d-flex flex-column">
+            <!-- Nombre del producto -->
+            <h4 class="card-title text-warning">
+              <i class="fas fa-tag me-2"></i>{{ producto.nombre }}
+            </h4>
+
+            <!-- Descripción -->
+            <p class="card-text text-muted mb-3">{{ producto.descripcion }}</p>
+
+            <!-- Precio -->
+            <div class="mb-3 text-center">
+              <span *ngIf="producto.enOferta" class="text-decoration-line-through text-muted me-2">
+                ${{ producto.precio }}
+              </span>
+              <span class="fw-bold fs-4" [class.text-danger]="producto.enOferta">
+                ${{ obtenerPrecioFinal(producto) }}
+              </span>
+            </div>
+
+            <!-- Cantidad en carrito -->
+            <div *ngIf="estaEnCarrito(producto.id)" class="mb-2 text-center">
+              <small class="text-success">
+                <i class="fas fa-shopping-cart me-1"></i>
+                {{ obtenerCantidadEnCarrito(producto.id) }} en el carrito
+              </small>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent">
+            <div class="d-grid gap-2">
+              <!-- Botón principal -->
+              <button
+                class="btn btn-warning btn-lg"
+                [disabled]="producto.stock === 0"
+                (click)="agregarAlCarrito(producto)">
+                <i class="fas fa-cart-plus me-2"></i>
+                {{ producto.stock === 0 ? 'No Disponible' : 'Agregar al Carrito' }}
+              </button>
+
+              <!-- Botón secundario -->
+              <button
+                class="btn btn-outline-warning btn-sm"
+                [routerLink]="['/producto', producto.id]">
+                <i class="fas fa-info-circle me-2"></i>
+                Ver Detalles
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="bg-light rounded p-4">
+          <h3 class="text-center mb-4">
+            <i class="fas fa-star me-2 text-warning"></i>
+            ¿Por qué elegir nuestros accesorios?
+          </h3>
+          <div class="row">
+            <div class="col-md-4 text-center mb-3">
+              <i class="fas fa-award fa-2x text-warning mb-2"></i>
+              <h5>Calidad Premium</h5>
+              <p class="text-muted">Materiales duraderos y seguros para tu mascota</p>
+            </div>
+            <div class="col-md-4 text-center mb-3">
+              <i class="fas fa-shipping-fast fa-2x text-success mb-2"></i>
+              <h5>Envío Rápido</h5>
+              <p class="text-muted">Entrega en 24-48 horas en toda la ciudad</p>
+            </div>
+            <div class="col-md-4 text-center mb-3">
+              <i class="fas fa-heart fa-2x text-danger mb-2"></i>
+              <h5>Amor Garantizado</h5>
+              <p class="text-muted">Productos diseñados pensando en el bienestar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,137 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+  <div class="container">
+    <!-- Logo y Nombre de la Tienda -->
+    <a class="navbar-brand" routerLink="/catalogo">
+      <i class="fas fa-paw me-2"></i>
+      <strong>PetShop</strong>
+    </a>
+
+    <!-- Botón para móviles -->
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menú de navegación -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Menú principal -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link"
+             routerLink="/catalogo"
+             routerLinkActive="active"
+             [routerLinkActiveOptions]="{exact: false}">
+            <i class="fas fa-store me-1"></i>
+            Catálogo
+          </a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"
+             href="#"
+             role="button"
+             data-bs-toggle="dropdown"
+             aria-expanded="false">
+            <i class="fas fa-list me-1"></i>
+            Categorías
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/mascotas"><i class="fas fa-dog me-2"></i>Mascotas</a></li>
+            <li><a class="dropdown-item" routerLink="/alimentacion"><i class="fas fa-bone me-2"></i>Alimentación</a></li>
+            <li><a class="dropdown-item" routerLink="/accesorios"><i class="fas fa-collar me-2"></i>Accesorios</a></li>
+            <li><a class="dropdown-item" routerLink="/juguetes"><i class="fas fa-ball me-2"></i>Juguetes</a></li>
+            <li><a class="dropdown-item" routerLink="/higiene"><i class="fas fa-bath me-2"></i>Higiene</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Menú derecho -->
+      <ul class="navbar-nav">
+        <!-- Carrito -->
+        <li class="nav-item">
+          <a class="nav-link position-relative"
+             routerLink="/carrito"
+             routerLinkActive="active">
+            <i class="fas fa-shopping-cart me-1"></i>
+            Carrito
+            <!-- Badge del carrito -->
+            <span *ngIf="(cantidadCarrito$ | async)! > 0"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ cantidadCarrito$ | async }}
+              <span class="visually-hidden">items en carrito</span>
+            </span>
+          </a>
+        </li>
+
+        <!-- Menú de usuario - No logueado -->
+        <ng-container *ngIf="!(isLoggedIn$ | async)">
+          <li class="nav-item">
+            <a class="nav-link"
+               routerLink="/login"
+               routerLinkActive="active">
+              <i class="fas fa-sign-in-alt me-1"></i>
+              Iniciar Sesión
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"
+               routerLink="/register"
+               routerLinkActive="active">
+              <i class="fas fa-user-plus me-1"></i>
+              Registrarse
+            </a>
+          </li>
+        </ng-container>
+
+        <!-- Menú de usuario - Logueado -->
+        <ng-container *ngIf="isLoggedIn$ | async">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle"
+               href="#"
+               role="button"
+               data-bs-toggle="dropdown"
+               aria-expanded="false">
+              <i class="fas fa-user-circle me-1"></i>
+              {{ currentUser?.nombre }} {{ currentUser?.apellido }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <h6 class="dropdown-header">
+                  <i class="fas fa-user me-2"></i>
+                  {{ currentUser?.nombre }} {{ currentUser?.apellido }}
+                </h6>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-user-edit me-2"></i>
+                  Mi Perfil
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-shopping-bag me-2"></i>
+                  Mis Pedidos
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item text-danger"
+                   href="#"
+                   (click)="logout(); $event.preventDefault()">
+                  <i class="fas fa-sign-out-alt me-2"></i>
+                  Cerrar Sesión
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+</nav>

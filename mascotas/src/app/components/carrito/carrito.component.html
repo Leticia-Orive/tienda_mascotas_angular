@@ -1,0 +1,231 @@
+<div class="container mt-4">
+  <!-- Header del Carrito -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="text-center mb-4">
+        <i class="fas fa-shopping-cart me-2 text-primary"></i>
+        Mi Carrito de Compras
+      </h2>
+    </div>
+  </div>
+
+  <!-- Carrito Vacío -->
+  <div *ngIf="carrito.items.length === 0" class="row">
+    <div class="col-12">
+      <div class="text-center py-5">
+        <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">Tu carrito está vacío</h4>
+        <p class="text-muted">¿Por qué no agregas algunos productos increíbles?</p>
+        <button class="btn btn-primary" routerLink="/catalogo">
+          <i class="fas fa-store me-2"></i>
+          Ir al Catálogo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carrito con Productos -->
+  <div *ngIf="carrito.items.length > 0" class="row">
+    <!-- Lista de Productos -->
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-list me-2"></i>
+            Productos en tu carrito ({{ carrito.cantidadItems }} items)
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <div *ngFor="let item of carrito.items; let i = index"
+               class="border-bottom"
+               [class.border-bottom-0]="i === carrito.items.length - 1">
+            <div class="p-3">
+              <div class="row align-items-center">
+                <!-- Imagen del Producto -->
+                <div class="col-md-2 col-3">
+                  <img [src]="item.producto.imagen"
+                       [alt]="item.producto.nombre"
+                       class="img-fluid rounded cart-product-image">
+                </div>
+
+                <!-- Información del Producto -->
+                <div class="col-md-4 col-9">
+                  <h6 class="mb-1">{{ item.producto.nombre }}</h6>
+                  <small class="text-muted">{{ item.producto.descripcion }}</small>
+
+                  <!-- Precio unitario -->
+                  <div class="mt-2">
+                    <span *ngIf="item.producto.enOferta"
+                          class="text-decoration-line-through text-muted me-2">
+                      ${{ item.producto.precio }}
+                    </span>
+                    <span class="fw-bold" [class.text-danger]="item.producto.enOferta">
+                      ${{ obtenerPrecioFinal(item) }}
+                    </span>
+                    <span class="text-muted"> c/u</span>
+                  </div>
+                </div>
+
+                <!-- Controles de Cantidad -->
+                <div class="col-md-3 col-6 mt-2 mt-md-0">
+                  <label class="form-label small">Cantidad:</label>
+                  <div class="input-group">
+                    <button class="btn btn-outline-secondary btn-sm"
+                            type="button"
+                            (click)="decrementarCantidad(item.producto.id)"
+                            [disabled]="item.cantidad <= 1">
+                      <i class="fas fa-minus"></i>
+                    </button>
+
+                    <input type="number"
+                           class="form-control form-control-sm text-center"
+                           [value]="item.cantidad"
+                           (input)="actualizarCantidad(item.producto.id, +$any($event.target).value)"
+                           min="1"
+                           [max]="item.producto.stock">
+
+                    <button class="btn btn-outline-secondary btn-sm"
+                            type="button"
+                            (click)="incrementarCantidad(item.producto.id)"
+                            [disabled]="item.cantidad >= item.producto.stock">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+
+                  <small class="text-muted">
+                    Stock disponible: {{ item.producto.stock }}
+                  </small>
+                </div>
+
+                <!-- Subtotal y Eliminar -->
+                <div class="col-md-3 col-6 mt-2 mt-md-0 text-md-end">
+                  <div class="fw-bold fs-5 text-primary mb-2">
+                    ${{ item.subtotal }}
+                  </div>
+
+                  <button class="btn btn-outline-danger btn-sm"
+                          (click)="eliminarProducto(item.producto.id)"
+                          title="Eliminar producto">
+                    <i class="fas fa-trash"></i>
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones del Carrito -->
+      <div class="mt-3">
+        <button class="btn btn-outline-secondary" routerLink="/catalogo">
+          <i class="fas fa-arrow-left me-2"></i>
+          Seguir Comprando
+        </button>
+
+        <button class="btn btn-outline-danger ms-2" (click)="limpiarCarrito()">
+          <i class="fas fa-trash me-2"></i>
+          Vaciar Carrito
+        </button>
+      </div>
+    </div>
+
+    <!-- Resumen de Compra -->
+    <div class="col-lg-4 mt-4 mt-lg-0">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-calculator me-2"></i>
+            Resumen de Compra
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-2">
+            <span>Subtotal ({{ carrito.cantidadItems }} items):</span>
+            <span class="fw-bold">${{ carrito.total }}</span>
+          </div>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span>Envío:</span>
+            <span class="text-success fw-bold">GRATIS</span>
+          </div>
+
+          <hr>
+
+          <div class="d-flex justify-content-between mb-3">
+            <span class="fw-bold">Total:</span>
+            <span class="fw-bold fs-4 text-primary">${{ carrito.total }}</span>
+          </div>
+
+          <!-- Botón de Compra -->
+          <button class="btn btn-success w-100 mb-3"
+                  (click)="procederAlPago()"
+                  [disabled]="!isLoggedIn">
+            <i class="fas fa-credit-card me-2"></i>
+            {{ isLoggedIn ? 'Proceder al Pago' : 'Inicia Sesión para Comprar' }}
+          </button>
+
+          <!-- Mensaje para usuarios no logueados -->
+          <div *ngIf="!isLoggedIn" class="alert alert-info" role="alert">
+            <small>
+              <i class="fas fa-info-circle me-2"></i>
+              <a routerLink="/login" class="text-decoration-none">Inicia sesión</a>
+              o
+              <a routerLink="/register" class="text-decoration-none">regístrate</a>
+              para completar tu compra
+            </small>
+          </div>
+
+          <!-- Información adicional -->
+          <div class="mt-3">
+            <small class="text-muted">
+              <i class="fas fa-shield-alt me-2 text-success"></i>
+              Compra 100% segura<br>
+              <i class="fas fa-truck me-2 text-primary"></i>
+              Envío gratis en compras mayores a $500<br>
+              <i class="fas fa-undo me-2 text-warning"></i>
+              Garantía de devolución
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmación de Compra -->
+<div *ngIf="mostrarResumenCompra" class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-check-circle me-2 text-success"></i>
+          Confirmar Compra
+        </h5>
+        <button type="button" class="btn-close" (click)="cancelarCompra()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-success" role="alert">
+          <h6><i class="fas fa-shopping-bag me-2"></i>Resumen de tu pedido:</h6>
+          <ul class="list-unstyled mb-0">
+            <li *ngFor="let item of carrito.items">
+              {{ item.cantidad }}x {{ item.producto.nombre }} - ${{ item.subtotal }}
+            </li>
+          </ul>
+          <hr>
+          <strong>Total a pagar: ${{ carrito.total }}</strong>
+        </div>
+
+        <p>¿Confirmas que deseas realizar esta compra?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancelarCompra()">
+          <i class="fas fa-times me-2"></i>Cancelar
+        </button>
+        <button type="button" class="btn btn-success" (click)="confirmarCompra()">
+          <i class="fas fa-credit-card me-2"></i>Confirmar Compra
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

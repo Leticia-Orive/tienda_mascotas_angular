@@ -1,0 +1,192 @@
+<div class="container mt-4">
+  <!-- Hero Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="bg-primary text-white rounded p-5 text-center">
+        <i class="fas fa-dog fa-3x mb-3"></i>
+        <h1 class="display-4 mb-3">Encuentra tu Compañero Perfecto</h1>
+        <p class="lead">Descubre mascotas adorables esperando un hogar lleno de amor</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando mascotas...</span>
+    </div>
+    <p class="mt-2">Cargando nuestras adorables mascotas...</p>
+  </div>
+
+  <!-- Mascotas Disponibles -->
+  <div *ngIf="!isLoading">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2 class="text-center mb-4">
+          <i class="fas fa-heart me-2 text-danger"></i>
+          Mascotas Disponibles para Adopción
+        </h2>
+        <p class="text-center text-muted">{{ mascotas.length }} mascotas esperando un hogar</p>
+      </div>
+    </div>
+
+    <!-- Sin mascotas -->
+    <div *ngIf="mascotas.length === 0" class="row">
+      <div class="col-12">
+        <div class="alert alert-info text-center" role="alert">
+          <i class="fas fa-info-circle me-2"></i>
+          Actualmente no tenemos mascotas disponibles. ¡Vuelve pronto!
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Mascotas -->
+    <div class="row">
+      <div *ngFor="let mascota of mascotas" class="col-xl-4 col-md-6 mb-4">
+        <div class="card h-100 mascota-card">
+          <!-- Imagen de la mascota -->
+          <div class="position-relative">
+            <img [src]="mascota.imagen"
+                 [alt]="mascota.nombre"
+                 class="card-img-top mascota-image">
+
+            <!-- Badge de oferta -->
+            <span *ngIf="mascota.enOferta"
+                  class="badge bg-success position-absolute top-0 start-0 m-2">
+              <i class="fas fa-percentage me-1"></i>¡Oferta!
+            </span>
+
+            <!-- Badge de disponibilidad -->
+            <span class="badge bg-info position-absolute top-0 end-0 m-2">
+              <i class="fas fa-paw me-1"></i>Disponible
+            </span>
+          </div>
+
+          <div class="card-body d-flex flex-column">
+            <!-- Nombre de la mascota -->
+            <h4 class="card-title text-primary">
+              <i class="fas fa-heart me-2 text-danger"></i>{{ mascota.nombre }}
+            </h4>
+
+            <!-- Descripción -->
+            <p class="card-text text-muted mb-3">{{ mascota.descripcion }}</p>
+
+            <!-- Información adicional -->
+            <div class="mascota-info mb-3">
+              <div class="row text-center">
+                <div class="col-4">
+                  <div class="info-item">
+                    <i class="fas fa-birthday-cake text-warning"></i>
+                    <small class="d-block">Edad</small>
+                    <strong>{{ obtenerEdad(mascota) }}</strong>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="info-item">
+                    <i class="fas fa-venus-mars text-info"></i>
+                    <small class="d-block">Sexo</small>
+                    <strong>{{ obtenerSexo(mascota) }}</strong>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="info-item">
+                    <i class="fas fa-ruler text-success"></i>
+                    <small class="d-block">Tamaño</small>
+                    <strong>{{ obtenerTamano(mascota) }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Estado de vacunación -->
+            <div class="mb-3">
+              <div class="row">
+                <div class="col-6">
+                  <span class="badge" [class.bg-success]="estaVacunado(mascota)" [class.bg-warning]="!estaVacunado(mascota)">
+                    <i class="fas fa-syringe me-1"></i>
+                    {{ estaVacunado(mascota) ? 'Vacunado' : 'Pendiente' }}
+                  </span>
+                </div>
+                <div class="col-6">
+                  <span class="badge" [class.bg-success]="estaEsterilizado(mascota)" [class.bg-warning]="!estaEsterilizado(mascota)">
+                    <i class="fas fa-cut me-1"></i>
+                    {{ estaEsterilizado(mascota) ? 'Esterilizado' : 'Pendiente' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Precio de adopción -->
+            <div class="mb-3 text-center">
+              <span *ngIf="mascota.enOferta" class="text-decoration-line-through text-muted me-2">
+                ${{ mascota.precio }}
+              </span>
+              <span class="fw-bold fs-4" [class.text-success]="mascota.enOferta">
+                ${{ obtenerPrecioFinal(mascota) }}
+              </span>
+              <small class="text-muted d-block">Costo de adopción</small>
+            </div>
+
+            <!-- Cantidad en carrito -->
+            <div *ngIf="estaEnCarrito(mascota.id)" class="mb-2 text-center">
+              <small class="text-success">
+                <i class="fas fa-heart me-1"></i>
+                Ya la tienes en tu lista de interés
+              </small>
+            </div>
+          </div>
+
+          <div class="card-footer bg-transparent">
+            <div class="d-grid gap-2">
+              <!-- Botón principal -->
+              <button
+                class="btn btn-success btn-lg"
+                [disabled]="mascota.stock === 0"
+                (click)="agregarAlCarrito(mascota)">
+                <i class="fas fa-heart me-2"></i>
+                {{ mascota.stock === 0 ? 'No Disponible' : 'Agregar a Mi Lista' }}
+              </button>
+
+              <!-- Botón secundario -->
+              <button
+                class="btn btn-outline-primary btn-sm"
+                [routerLink]="['/producto', mascota.id]">
+                <i class="fas fa-info-circle me-2"></i>
+                Conocer Más
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Información adicional -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="bg-light rounded p-4">
+        <h3 class="text-center mb-4">
+          <i class="fas fa-info-circle me-2 text-primary"></i>
+          Información sobre Adopción
+        </h3>
+        <div class="row">
+          <div class="col-md-4 text-center mb-3">
+            <i class="fas fa-clipboard-check fa-2x text-success mb-2"></i>
+            <h5>Proceso Simple</h5>
+            <p class="text-muted">Proceso de adopción fácil y transparente</p>
+          </div>
+          <div class="col-md-4 text-center mb-3">
+            <i class="fas fa-heart fa-2x text-danger mb-2"></i>
+            <h5>Amor Garantizado</h5>
+            <p class="text-muted">Todas nuestras mascotas son amorosas y sociables</p>
+          </div>
+          <div class="col-md-4 text-center mb-3">
+            <i class="fas fa-user-md fa-2x text-info mb-2"></i>
+            <h5>Salud Certificada</h5>
+            <p class="text-muted">Revisión veterinaria completa incluida</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

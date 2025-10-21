@@ -1,0 +1,136 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow">
+        <div class="card-header text-center bg-success text-white">
+          <h3><i class="fas fa-user-plus me-2"></i>Crear Cuenta</h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <!-- Nombre y Apellido -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="nombre" class="form-label">Nombre *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [class.is-invalid]="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched"
+                  id="nombre"
+                  formControlName="nombre"
+                  placeholder="Tu nombre">
+                <div class="invalid-feedback">
+                  {{ getFieldError('nombre') }}
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="apellido" class="form-label">Apellido *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [class.is-invalid]="registerForm.get('apellido')?.invalid && registerForm.get('apellido')?.touched"
+                  id="apellido"
+                  formControlName="apellido"
+                  placeholder="Tu apellido">
+                <div class="invalid-feedback">
+                  {{ getFieldError('apellido') }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email *</label>
+              <input
+                type="email"
+                class="form-control"
+                [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+                id="email"
+                formControlName="email"
+                placeholder="tu@email.com">
+              <div class="invalid-feedback">
+                {{ getFieldError('email') }}
+              </div>
+            </div>
+
+            <!-- Contraseña y Confirmar -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="password" class="form-label">Contraseña *</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+                  id="password"
+                  formControlName="password"
+                  placeholder="Mínimo 6 caracteres">
+                <div class="invalid-feedback">
+                  {{ getFieldError('password') }}
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="confirmPassword" class="form-label">Confirmar Contraseña *</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  [class.is-invalid]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+                  id="confirmPassword"
+                  formControlName="confirmPassword"
+                  placeholder="Repite tu contraseña">
+                <div class="invalid-feedback">
+                  {{ getFieldError('confirmPassword') }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Teléfono -->
+            <div class="mb-3">
+              <label for="telefono" class="form-label">Teléfono</label>
+              <input
+                type="tel"
+                class="form-control"
+                id="telefono"
+                formControlName="telefono"
+                placeholder="Tu número de teléfono (opcional)">
+            </div>
+
+            <!-- Dirección -->
+            <div class="mb-3">
+              <label for="direccion" class="form-label">Dirección</label>
+              <textarea
+                class="form-control"
+                id="direccion"
+                formControlName="direccion"
+                rows="2"
+                placeholder="Tu dirección (opcional)"></textarea>
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+              <i class="fas fa-exclamation-triangle me-2"></i>{{ errorMessage }}
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              class="btn btn-success w-100"
+              [disabled]="isLoading">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              <i *ngIf="!isLoading" class="fas fa-user-plus me-2"></i>
+              {{ isLoading ? 'Creando cuenta...' : 'Crear Cuenta' }}
+            </button>
+          </form>
+
+          <!-- Login Link -->
+          <div class="text-center mt-3">
+            <small>
+              ¿Ya tienes cuenta?
+              <a routerLink="/login" class="text-decoration-none">Inicia sesión aquí</a>
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

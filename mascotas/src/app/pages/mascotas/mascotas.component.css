@@ -1,0 +1,73 @@
+.mascota-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.mascota-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.2);
+}
+
+.mascota-image {
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.mascota-card:hover .mascota-image {
+  transform: scale(1.05);
+}
+
+.mascota-info .info-item {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: rgba(0,0,0,.05);
+}
+
+.mascota-info .info-item i {
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.card-footer {
+  background-color: rgba(0,0,0,.03);
+  border-top: 1px solid rgba(0,0,0,.125);
+}
+
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Hero section */
+.bg-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mascota-image {
+    height: 200px;
+  }
+
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .mascota-info .row > div {
+    margin-bottom: 0.5rem;
+  }
+}

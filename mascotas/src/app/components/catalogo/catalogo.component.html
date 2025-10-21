@@ -1,0 +1,145 @@
+<div class="container mt-4">
+  <!-- Header del Catálogo -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="text-center mb-4">
+        <i class="fas fa-store me-2 text-primary"></i>
+        Catálogo de Productos
+      </h2>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="row mb-4">
+    <div class="col-md-6 mb-3">
+      <label for="busqueda" class="form-label">Buscar productos</label>
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="fas fa-search"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          id="busqueda"
+          [(ngModel)]="terminoBusqueda"
+          (input)="onBusquedaChange()"
+          placeholder="Buscar por nombre o descripción...">
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label for="categoria" class="form-label">Filtrar por categoría</label>
+      <select
+        class="form-select"
+        id="categoria"
+        [(ngModel)]="categoriaSeleccionada"
+        (change)="onCategoriaChange()">
+        <option value="">Todas las categorías</option>
+        <option *ngFor="let categoria of categorias" [value]="categoria">
+          {{ getCategoriaDisplayName(categoria) }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2">Cargando productos...</p>
+  </div>
+
+  <!-- Productos -->
+  <div *ngIf="!isLoading" class="row">
+    <!-- Sin resultados -->
+    <div *ngIf="productosFiltrados.length === 0" class="col-12">
+      <div class="alert alert-info text-center" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        No se encontraron productos con los filtros aplicados.
+      </div>
+    </div>
+
+    <!-- Lista de productos -->
+    <div *ngFor="let producto of productosFiltrados" class="col-lg-3 col-md-4 col-sm-6 mb-4">
+      <div class="card h-100 product-card">
+        <!-- Imagen del producto -->
+        <div class="position-relative">
+          <img [src]="producto.imagen"
+               [alt]="producto.nombre"
+               class="card-img-top product-image">
+
+          <!-- Badge de oferta -->
+          <span *ngIf="producto.enOferta"
+                class="badge bg-danger position-absolute top-0 start-0 m-2">
+            ¡Oferta!
+          </span>
+
+          <!-- Badge de stock -->
+          <span *ngIf="producto.stock <= 5"
+                class="badge bg-warning position-absolute top-0 end-0 m-2">
+            ¡Últimas {{ producto.stock }}!
+          </span>
+        </div>
+
+        <div class="card-body d-flex flex-column">
+          <!-- Nombre del producto -->
+          <h5 class="card-title">{{ producto.nombre }}</h5>
+
+          <!-- Descripción -->
+          <p class="card-text text-muted small flex-grow-1">
+            {{ producto.descripcion }}
+          </p>
+
+          <!-- Precio -->
+          <div class="mb-3">
+            <span *ngIf="producto.enOferta" class="text-decoration-line-through text-muted me-2">
+              ${{ producto.precio }}
+            </span>
+            <span class="fw-bold fs-5"
+                  [class.text-danger]="producto.enOferta">
+              ${{ obtenerPrecioFinal(producto) }}
+            </span>
+          </div>
+
+          <!-- Stock -->
+          <div class="mb-2">
+            <small class="text-muted">
+              <i class="fas fa-box me-1"></i>
+              Stock: {{ producto.stock }} disponibles
+            </small>
+          </div>
+
+          <!-- Cantidad en carrito -->
+          <div *ngIf="estaEnCarrito(producto.id)" class="mb-2">
+            <small class="text-success">
+              <i class="fas fa-shopping-cart me-1"></i>
+              {{ obtenerCantidadEnCarrito(producto.id) }} en el carrito
+            </small>
+          </div>
+        </div>
+
+        <div class="card-footer bg-transparent">
+          <div class="d-grid gap-2">
+            <!-- Botón agregar al carrito -->
+            <button
+              class="btn btn-primary"
+              [disabled]="producto.stock === 0"
+              (click)="agregarAlCarrito(producto)">
+              <i class="fas fa-cart-plus me-2"></i>
+              {{ producto.stock === 0 ? 'Sin Stock' : 'Agregar al Carrito' }}
+            </button>
+
+            <!-- Botón ver detalles -->
+            <button
+              class="btn btn-outline-secondary btn-sm"
+              [routerLink]="['/producto', producto.id]">
+              <i class="fas fa-eye me-2"></i>
+              Ver Detalles
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+.juguete-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.juguete-card:hover {
+  transform: translateY(-8px) rotate(1deg);
+  box-shadow: 0 12px 30px rgba(0,0,0,.2);
+}
+
+.juguete-image {
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.juguete-card:hover .juguete-image {
+  transform: scale(1.1) rotate(-1deg);
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.card-footer {
+  background-color: rgba(0,0,0,.03);
+  border-top: 1px solid rgba(0,0,0,.125);
+}
+
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Hero section */
+.bg-info {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+}
+
+/* Input group styling */
+.input-group-text {
+  background-color: #d1ecf1;
+  border-color: #17a2b8;
+  color: #0c5460;
+}
+
+.form-control:focus {
+  border-color: #17a2b8;
+  box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+}
+
+/* Fun animations */
+@keyframes bounce {
+  0%, 20%, 60%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  80% {
+    transform: translateY(-5px);
+  }
+}
+
+.juguete-card:hover .fas.fa-puzzle-piece {
+  animation: bounce 1s;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .juguete-image {
+    height: 200px;
+  }
+
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .juguete-card:hover {
+    transform: translateY(-5px);
+  }
+}
