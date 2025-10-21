@@ -1,0 +1,90 @@
+.producto-imagen {
+  max-height: 500px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.producto-imagen:hover {
+  transform: scale(1.02);
+}
+
+.precio-section {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid #e9ecef;
+}
+
+.producto-info {
+  padding: 1rem;
+}
+
+.badge {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Breadcrumb styling */
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+}
+
+.breadcrumb-item a {
+  color: #6c757d;
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  color: #495057;
+  text-decoration: underline;
+}
+
+/* Input group styling */
+.input-group .btn {
+  border-color: #6c757d;
+}
+
+.input-group .form-control {
+  border-color: #6c757d;
+}
+
+.input-group .form-control:focus {
+  border-color: #495057;
+  box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.25);
+}
+
+/* Alert styling */
+.alert {
+  border-radius: 0.5rem;
+}
+
+/* Button styling */
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 500;
+}
+
+.btn-success {
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .producto-info {
+    padding: 0.5rem;
+  }
+
+  .precio-section {
+    padding: 1rem;
+  }
+
+  .display-6 {
+    font-size: 1.75rem;
+  }
+}

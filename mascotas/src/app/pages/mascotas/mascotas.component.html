@@ -1,11 +1,127 @@
-<div class="container mt-4">
+<div class="container-fluid py-4">
   <!-- Hero Section -->
   <div class="row mb-5">
     <div class="col-12">
-      <div class="bg-primary text-white rounded p-5 text-center">
-        <i class="fas fa-dog fa-3x mb-3"></i>
-        <h1 class="display-4 mb-3">Encuentra tu Compañero Perfecto</h1>
-        <p class="lead">Descubre mascotas adorables esperando un hogar lleno de amor</p>
+      <div class="bg-gradient-primary text-white rounded-4 p-5 text-center position-relative overflow-hidden">
+        <div class="position-absolute top-0 start-0 w-100 h-100 opacity-10">
+          <i class="fas fa-paw" style="font-size: 15rem; position: absolute; right: -2rem; top: -2rem;"></i>
+        </div>
+        <div class="position-relative">
+          <h1 class="display-3 fw-bold mb-3">
+            <i class="fas fa-heart me-3"></i>
+            Encuentra tu Compañero Perfecto
+          </h1>
+          <p class="lead mb-0">Explora nuestras diferentes categorías de mascotas</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categorías de Mascotas -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h2 class="text-center mb-5">
+        <i class="fas fa-paw me-2 text-primary"></i>
+        Categorías de Mascotas
+      </h2>
+    </div>
+  </div>
+
+  <!-- Grid de Categorías -->
+  <div class="row g-4 mb-5">
+    <!-- Perros -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card category-card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <div class="category-icon mb-3">
+            <i class="fas fa-dog fa-4x text-primary"></i>
+          </div>
+          <h4 class="card-title text-primary fw-bold mb-3">Perros</h4>
+          <p class="card-text text-muted mb-4">Fieles compañeros de todas las razas y tamaños</p>
+          <button class="btn btn-primary btn-lg w-100" routerLink="/mascotas/perros">
+            <i class="fas fa-paw me-2"></i>Ver Perros
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gatos -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card category-card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <div class="category-icon mb-3">
+            <i class="fas fa-cat fa-4x text-success"></i>
+          </div>
+          <h4 class="card-title text-success fw-bold mb-3">Gatos</h4>
+          <p class="card-text text-muted mb-4">Elegantes felinos independientes y cariñosos</p>
+          <button class="btn btn-success btn-lg w-100" routerLink="/mascotas/gatos">
+            <i class="fas fa-paw me-2"></i>Ver Gatos
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conejos -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card category-card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <div class="category-icon mb-3">
+            <i class="fas fa-rabbit fa-4x text-warning"></i>
+          </div>
+          <h4 class="card-title text-warning fw-bold mb-3">Conejos</h4>
+          <p class="card-text text-muted mb-4">Tiernos y juguetones compañeros esponjosos</p>
+          <button class="btn btn-warning btn-lg w-100" routerLink="/mascotas/conejos">
+            <i class="fas fa-carrot me-2"></i>Ver Conejos
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Peces -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card category-card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <div class="category-icon mb-3">
+            <i class="fas fa-fish fa-4x text-info"></i>
+          </div>
+          <h4 class="card-title text-info fw-bold mb-3">Peces</h4>
+          <p class="card-text text-muted mb-4">Coloridos habitantes acuáticos relajantes</p>
+          <button class="btn btn-info btn-lg w-100" routerLink="/mascotas/peces">
+            <i class="fas fa-water me-2"></i>Ver Peces
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Iguanas -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card category-card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <div class="category-icon mb-3">
+            <i class="fas fa-dragon fa-4x text-secondary"></i>
+          </div>
+          <h4 class="card-title text-secondary fw-bold mb-3">Reptiles</h4>
+          <p class="card-text text-muted mb-4">Exóticos reptiles de sangre fría</p>
+          <button class="btn btn-secondary btn-lg w-100" routerLink="/mascotas/iguanas">
+            <i class="fas fa-leaf me-2"></i>Ver Reptiles
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aves -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card category-card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <div class="category-icon mb-3">
+            <i class="fas fa-dove fa-4x text-danger"></i>
+          </div>
+          <h4 class="card-title text-danger fw-bold mb-3">Aves</h4>
+          <p class="card-text text-muted mb-4">Compañeros alados llenos de melodía</p>
+          <button class="btn btn-danger btn-lg w-100" routerLink="/mascotas/aves">
+            <i class="fas fa-feather me-2"></i>Ver Aves
+          </button>
+        </div>
       </div>
     </div>
   </div>

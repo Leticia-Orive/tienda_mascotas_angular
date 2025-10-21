@@ -52,8 +52,18 @@
 
       <!-- Menú derecho -->
       <ul class="navbar-nav">
-        <!-- Carrito -->
-        <li class="nav-item">
+        <!-- Panel de Admin (solo para administradores) -->
+        <li class="nav-item" *ngIf="isAdmin()">
+          <a class="nav-link"
+             routerLink="/admin"
+             routerLinkActive="active">
+            <i class="fas fa-tachometer-alt me-1"></i>
+            Panel Admin
+          </a>
+        </li>
+
+        <!-- Carrito (solo para usuarios que pueden comprar) -->
+        <li class="nav-item" *ngIf="puedeComprar()">
           <a class="nav-link position-relative"
              routerLink="/carrito"
              routerLinkActive="active">
@@ -66,6 +76,14 @@
               <span class="visually-hidden">items en carrito</span>
             </span>
           </a>
+        </li>
+
+        <!-- Mensaje para usuarios no registrados -->
+        <li class="nav-item" *ngIf="isNoRegistrado()">
+          <span class="navbar-text text-muted">
+            <i class="fas fa-info-circle me-1"></i>
+            Regístrate para comprar
+          </span>
         </li>
 
         <!-- Menú de usuario - No logueado -->
@@ -106,19 +124,44 @@
                   {{ currentUser?.nombre }} {{ currentUser?.apellido }}
                 </h6>
               </li>
-              <li><hr class="dropdown-divider"></li>
               <li>
+                <span class="dropdown-item-text">
+                  <small class="badge"
+                         [ngClass]="isAdmin() ? 'bg-danger' : 'bg-primary'">
+                    {{ getRoleName() }}
+                  </small>
+                </span>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+
+              <!-- Opciones para Admin -->
+              <li *ngIf="isAdmin()">
+                <a class="dropdown-item" routerLink="/admin">
+                  <i class="fas fa-tachometer-alt me-2"></i>
+                  Panel de Control
+                </a>
+              </li>
+
+              <!-- Opciones para Cliente -->
+              <li *ngIf="isCliente()">
                 <a class="dropdown-item" href="#">
                   <i class="fas fa-user-edit me-2"></i>
                   Mi Perfil
                 </a>
               </li>
-              <li>
+              <li *ngIf="isCliente()">
                 <a class="dropdown-item" href="#">
                   <i class="fas fa-shopping-bag me-2"></i>
                   Mis Pedidos
                 </a>
               </li>
+              <li *ngIf="isCliente()">
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-heart me-2"></i>
+                  Mis Favoritos
+                </a>
+              </li>
+
               <li><hr class="dropdown-divider"></li>
               <li>
                 <a class="dropdown-item text-danger"

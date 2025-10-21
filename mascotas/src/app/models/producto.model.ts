@@ -5,6 +5,7 @@ export interface Producto {
   precio: number;
   imagen: string;
   categoria: Categoria;
+  subcategoria?: string; // Para mascotas: 'perros', 'gatos', etc.
   stock: number;
   enOferta?: boolean;
   precioOferta?: number;

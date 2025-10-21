@@ -1,0 +1,206 @@
+<div class="container-fluid mt-4">
+  <!-- Header del Panel -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="bg-dark text-white rounded p-4">
+        <h1 class="display-5 mb-0">
+          <i class="fas fa-tachometer-alt me-3"></i>
+          Panel de Administración
+        </h1>
+        <p class="lead mb-0">Gestión completa de la tienda de mascotas</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="row mb-5">
+    <div class="col-lg-3 col-md-6 mb-3">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title">{{ estadisticas.totalUsuarios }}</h4>
+              <p class="card-text">Total Usuarios</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-users fa-2x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title">{{ estadisticas.totalClientes }}</h4>
+              <p class="card-text">Clientes Activos</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-user-friends fa-2x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+      <div class="card bg-warning text-dark">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title">{{ estadisticas.totalProductos }}</h4>
+              <p class="card-text">Productos</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-box fa-2x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+      <div class="card bg-info text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title">{{ estadisticas.ventasRecientes }}</h4>
+              <p class="card-text">Ventas del Mes</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-chart-line fa-2x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pestañas de Gestión -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="activeTab === 'usuarios'"
+        (click)="setActiveTab('usuarios')"
+        type="button">
+        <i class="fas fa-users me-2"></i>Gestión de Usuarios
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="activeTab === 'productos'"
+        (click)="setActiveTab('productos')"
+        type="button">
+        <i class="fas fa-box me-2"></i>Gestión de Productos
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <!-- Pestaña de Usuarios -->
+    <div *ngIf="activeTab === 'usuarios'" class="tab-pane show active">
+      <div class="card mt-3">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-users me-2"></i>
+            Lista de Usuarios Registrados
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Rol</th>
+                  <th>Fecha Registro</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let usuario of usuarios">
+                  <td>{{ usuario.id }}</td>
+                  <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
+                  <td>{{ usuario.email }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="getRoleBadgeClass(usuario.rol)">
+                      {{ usuario.rol }}
+                    </span>
+                  </td>
+                  <td>{{ usuario.fechaRegistro | date:'short' }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="usuario.activo ? 'bg-success' : 'bg-danger'">
+                      {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      class="btn btn-sm me-1"
+                      [ngClass]="usuario.activo ? 'btn-warning' : 'btn-success'"
+                      (click)="cambiarEstadoUsuario(usuario)">
+                      <i [ngClass]="usuario.activo ? 'fas fa-ban' : 'fas fa-check'"></i>
+                      {{ usuario.activo ? 'Desactivar' : 'Activar' }}
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pestaña de Productos -->
+    <div *ngIf="activeTab === 'productos'" class="tab-pane show active">
+      <div class="card mt-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">
+            <i class="fas fa-box me-2"></i>
+            Inventario de Productos
+          </h5>
+          <button class="btn btn-success" routerLink="/admin/productos/nuevo">
+            <i class="fas fa-plus me-2"></i>Añadir Producto
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div *ngFor="let producto of productos" class="col-xl-4 col-md-6 mb-3">
+              <div class="card h-100">
+                <img [src]="producto.imagen" [alt]="producto.nombre" class="card-img-top" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                  <h6 class="card-title">{{ producto.nombre }}</h6>
+                  <p class="card-text small text-muted">{{ producto.descripcion }}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-primary">${{ producto.precio }}</span>
+                    <span class="badge bg-secondary">Stock: {{ producto.stock }}</span>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="btn-group w-100">
+                    <button class="btn btn-outline-info btn-sm" [routerLink]="['/producto', producto.id]">
+                      <i class="fas fa-eye"></i> Ver
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" [routerLink]="['/admin/productos/editar', producto.id]">
+                      <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" (click)="eliminarProducto(producto)">
+                      <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

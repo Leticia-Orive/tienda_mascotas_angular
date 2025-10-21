@@ -1,0 +1,286 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title mb-0">
+            <i class="fas fa-box me-2"></i>
+            {{ isEditMode ? 'Editar Producto' : 'Añadir Nuevo Producto' }}
+          </h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="productoForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <!-- Nombre -->
+              <div class="col-md-6 mb-3">
+                <label for="nombre" class="form-label">Nombre del Producto *</label>
+                <input
+                  type="text"
+                  id="nombre"
+                  class="form-control"
+                  formControlName="nombre"
+                  [class.is-invalid]="getFieldError('nombre')"
+                  placeholder="Ej: Golden Retriever Cachorro">
+                <div class="invalid-feedback">
+                  {{ getFieldError('nombre') }}
+                </div>
+              </div>
+
+              <!-- Categoría -->
+              <div class="col-md-6 mb-3">
+                <label for="categoria" class="form-label">Categoría *</label>
+                <select
+                  id="categoria"
+                  class="form-select"
+                  formControlName="categoria"
+                  (change)="onCategoriaChange()"
+                  [class.is-invalid]="getFieldError('categoria')">
+                  <option value="">Seleccionar categoría</option>
+                  <option *ngFor="let categoria of categorias" [value]="categoria">
+                    {{ categoria | titlecase }}
+                  </option>
+                </select>
+                <div class="invalid-feedback">
+                  {{ getFieldError('categoria') }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Subcategoría (solo para mascotas) -->
+            <div class="row" *ngIf="mostrarSubcategorias">
+              <div class="col-md-6 mb-3">
+                <label for="subcategoria" class="form-label">Tipo de Mascota *</label>
+                <select
+                  id="subcategoria"
+                  class="form-select"
+                  formControlName="subcategoria"
+                  [class.is-invalid]="getFieldError('subcategoria')">
+                  <option value="">Seleccionar tipo</option>
+                  <option *ngFor="let sub of subcategoriasMascotas" [value]="sub">
+                    {{ sub | titlecase }}
+                  </option>
+                </select>
+                <div class="invalid-feedback">
+                  {{ getFieldError('subcategoria') }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="mb-3">
+              <label for="descripcion" class="form-label">Descripción *</label>
+              <textarea
+                id="descripcion"
+                class="form-control"
+                formControlName="descripcion"
+                rows="3"
+                [class.is-invalid]="getFieldError('descripcion')"
+                placeholder="Describe el producto detalladamente...">
+              </textarea>
+              <div class="invalid-feedback">
+                {{ getFieldError('descripcion') }}
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- Precio -->
+              <div class="col-md-4 mb-3">
+                <label for="precio" class="form-label">Precio *</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input
+                    type="number"
+                    id="precio"
+                    class="form-control"
+                    formControlName="precio"
+                    [class.is-invalid]="getFieldError('precio')"
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00">
+                </div>
+                <div class="invalid-feedback">
+                  {{ getFieldError('precio') }}
+                </div>
+              </div>
+
+              <!-- Stock -->
+              <div class="col-md-4 mb-3">
+                <label for="stock" class="form-label">Stock *</label>
+                <input
+                  type="number"
+                  id="stock"
+                  class="form-control"
+                  formControlName="stock"
+                  [class.is-invalid]="getFieldError('stock')"
+                  min="0"
+                  placeholder="0">
+                <div class="invalid-feedback">
+                  {{ getFieldError('stock') }}
+                </div>
+              </div>
+
+              <!-- Oferta -->
+              <div class="col-md-4 mb-3">
+                <label class="form-label d-block">Oferta</label>
+                <div class="form-check">
+                  <input
+                    type="checkbox"
+                    id="enOferta"
+                    class="form-check-input"
+                    formControlName="enOferta">
+                  <label class="form-check-label" for="enOferta">
+                    Producto en oferta
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Precio de Oferta (solo si está en oferta) -->
+            <div class="mb-3" *ngIf="productoForm.get('enOferta')?.value">
+              <label for="precioOferta" class="form-label">Precio de Oferta</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input
+                  type="number"
+                  id="precioOferta"
+                  class="form-control"
+                  formControlName="precioOferta"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00">
+              </div>
+            </div>
+
+            <!-- Campos específicos para mascotas -->
+            <div *ngIf="mostrarSubcategorias">
+              <h5 class="text-primary mb-3">
+                <i class="fas fa-paw me-2"></i>Información de la Mascota
+              </h5>
+
+              <div class="row">
+                <!-- Raza -->
+                <div class="col-md-6 mb-3">
+                  <label for="raza" class="form-label">Raza</label>
+                  <input
+                    type="text"
+                    id="raza"
+                    class="form-control"
+                    formControlName="raza"
+                    placeholder="Ej: Golden Retriever, Persa, etc.">
+                </div>
+
+                <!-- Edad -->
+                <div class="col-md-6 mb-3">
+                  <label for="edad" class="form-label">Edad</label>
+                  <input
+                    type="text"
+                    id="edad"
+                    class="form-control"
+                    formControlName="edad"
+                    placeholder="Ej: 3 meses, 2 años">
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- Sexo -->
+                <div class="col-md-4 mb-3">
+                  <label for="sexo" class="form-label">Sexo</label>
+                  <select id="sexo" class="form-select" formControlName="sexo">
+                    <option value="">Seleccionar</option>
+                    <option value="Macho">Macho</option>
+                    <option value="Hembra">Hembra</option>
+                  </select>
+                </div>
+
+                <!-- Tamaño -->
+                <div class="col-md-4 mb-3">
+                  <label for="tamano" class="form-label">Tamaño</label>
+                  <select id="tamano" class="form-select" formControlName="tamano">
+                    <option value="">Seleccionar</option>
+                    <option value="Pequeño">Pequeño</option>
+                    <option value="Mediano">Mediano</option>
+                    <option value="Grande">Grande</option>
+                  </select>
+                </div>
+
+                <!-- Checkboxes -->
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Estado</label>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      id="vacunado"
+                      class="form-check-input"
+                      formControlName="vacunado">
+                    <label class="form-check-label" for="vacunado">
+                      Vacunado
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      id="esterilizado"
+                      class="form-check-input"
+                      formControlName="esterilizado">
+                    <label class="form-check-label" for="esterilizado">
+                      Esterilizado
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Imagen URL -->
+            <div class="mb-3">
+              <label for="imagen" class="form-label">URL de la Imagen *</label>
+              <input
+                type="url"
+                id="imagen"
+                class="form-control"
+                formControlName="imagen"
+                [class.is-invalid]="getFieldError('imagen')"
+                placeholder="https://ejemplo.com/imagen.jpg">
+              <div class="form-text">Proporciona una URL válida para la imagen del producto</div>
+              <div class="invalid-feedback">
+                {{ getFieldError('imagen') }}
+              </div>
+            </div>
+
+            <!-- Vista previa de la imagen -->
+            <div class="mb-3" *ngIf="productoForm.get('imagen')?.value && productoForm.get('imagen')?.valid">
+              <label class="form-label">Vista Previa:</label>
+              <div class="text-center">
+                <img
+                  [src]="productoForm.get('imagen')?.value"
+                  alt="Vista previa"
+                  class="img-thumbnail"
+                  style="max-width: 200px; max-height: 200px; object-fit: cover;">
+              </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="d-flex justify-content-between">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="onCancel()"
+                [disabled]="isLoading">
+                <i class="fas fa-times me-2"></i>
+                Cancelar
+              </button>
+
+              <button
+                type="submit"
+                class="btn btn-success"
+                [disabled]="productoForm.invalid || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!isLoading" [class]="isEditMode ? 'fas fa-save me-2' : 'fas fa-plus me-2'"></i>
+                {{ isEditMode ? 'Actualizar Producto' : 'Crear Producto' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

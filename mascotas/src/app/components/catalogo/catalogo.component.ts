@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductoService } from '../../services/producto.service';
 import { CarritoService } from '../../services/carrito.service';
+import { AuthService } from '../../services/auth.service';
 import { Producto, Categoria } from '../../models/producto.model';
 
 @Component({
@@ -22,7 +23,8 @@ export class CatalogoComponent implements OnInit {
 
   constructor(
     private productoService: ProductoService,
-    private carritoService: CarritoService
+    private carritoService: CarritoService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -98,5 +100,18 @@ export class CatalogoComponent implements OnInit {
       'higiene': 'Higiene'
     };
     return nombres[categoria] || categoria;
+  }
+
+  // Métodos para verificar permisos
+  puedeComprar(): boolean {
+    return this.authService.tienePermiso('puedeComprar');
+  }
+
+  isNoRegistrado(): boolean {
+    return this.authService.isNoRegistrado();
+  }
+
+  mostrarMensajeRegistro(): void {
+    alert('Debes registrarte para poder comprar productos. ¡Haz clic en "Registrarse" en el menú!');
   }
 }

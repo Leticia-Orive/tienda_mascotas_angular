@@ -121,13 +121,23 @@
 
         <div class="card-footer bg-transparent">
           <div class="d-grid gap-2">
-            <!-- Botón agregar al carrito -->
+            <!-- Botón agregar al carrito (solo para usuarios autenticados) -->
             <button
+              *ngIf="puedeComprar()"
               class="btn btn-primary"
               [disabled]="producto.stock === 0"
               (click)="agregarAlCarrito(producto)">
               <i class="fas fa-cart-plus me-2"></i>
               {{ producto.stock === 0 ? 'Sin Stock' : 'Agregar al Carrito' }}
+            </button>
+
+            <!-- Mensaje para usuarios no registrados -->
+            <button
+              *ngIf="isNoRegistrado()"
+              class="btn btn-warning"
+              (click)="mostrarMensajeRegistro()">
+              <i class="fas fa-user-plus me-2"></i>
+              Regístrate para Comprar
             </button>
 
             <!-- Botón ver detalles -->

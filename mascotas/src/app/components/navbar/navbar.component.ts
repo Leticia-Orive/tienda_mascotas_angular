@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CarritoService } from '../../services/carrito.service';
-import { Usuario } from '../../models/usuario.model';
+import { Usuario, TipoUsuario } from '../../models/usuario.model';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -36,6 +36,35 @@ export class NavbarComponent implements OnInit {
     if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
       this.authService.logout();
       this.router.navigate(['/catalogo']);
+    }
+  }
+
+  // Métodos para verificar roles
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  isCliente(): boolean {
+    return this.authService.isCliente();
+  }
+
+  isNoRegistrado(): boolean {
+    return this.authService.isNoRegistrado();
+  }
+
+  puedeComprar(): boolean {
+    return this.authService.tienePermiso('puedeComprar');
+  }
+
+  getRoleName(): string {
+    const rol = this.authService.getCurrentUserRole();
+    switch (rol) {
+      case TipoUsuario.ADMIN:
+        return 'Administrador';
+      case TipoUsuario.CLIENTE:
+        return 'Cliente';
+      default:
+        return 'Invitado';
     }
   }
 }

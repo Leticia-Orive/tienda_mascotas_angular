@@ -1,1 +1,226 @@
-<p>producto-detalle works!</p>
+<div class="container mt-4">
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando producto...</span>
+    </div>
+    <p class="mt-2">Cargando detalles del producto...</p>
+  </div>
+
+  <!-- Producto -->
+  <div *ngIf="!isLoading && producto" class="row">
+    <!-- Breadcrumb -->
+    <div class="col-12 mb-3">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a routerLink="/catalogo">Catálogo</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/' + producto.categoria]">{{ producto.categoria | titlecase }}</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            {{ producto.nombre }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+
+    <!-- Imagen del producto -->
+    <div class="col-lg-6 mb-4">
+      <div class="position-relative">
+        <img
+          [src]="producto.imagen"
+          [alt]="producto.nombre"
+          class="img-fluid rounded shadow producto-imagen">
+
+        <!-- Badge de oferta -->
+        <span *ngIf="producto.enOferta"
+              class="badge bg-danger position-absolute top-0 start-0 m-3 fs-6">
+          <i class="fas fa-percentage me-1"></i>¡OFERTA!
+        </span>
+
+        <!-- Badge de stock -->
+        <span class="badge position-absolute top-0 end-0 m-3 fs-6"
+              [class.bg-success]="producto.stock > 5"
+              [class.bg-warning]="producto.stock <= 5 && producto.stock > 0"
+              [class.bg-danger]="producto.stock === 0">
+          {{ producto.stock > 0 ? 'Disponible' : 'Agotado' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Información del producto -->
+    <div class="col-lg-6">
+      <div class="producto-info">
+        <!-- Título -->
+        <h1 class="display-6 mb-3">{{ producto.nombre }}</h1>
+
+        <!-- Categoría -->
+        <p class="text-muted mb-3">
+          <i class="fas fa-tag me-2"></i>
+          Categoría: <strong>{{ producto.categoria | titlecase }}</strong>
+        </p>
+
+        <!-- Descripción -->
+        <div class="mb-4">
+          <h5>Descripción:</h5>
+          <p class="text-muted">{{ producto.descripcion }}</p>
+        </div>
+
+        <!-- Información específica para mascotas -->
+        <div *ngIf="esMascota() && obtenerMascota() as mascota" class="mb-4">
+          <h5>Información de la Mascota:</h5>
+          <div class="row">
+            <div class="col-6 mb-2">
+              <strong>Raza:</strong> {{ mascota.raza }}
+            </div>
+            <div class="col-6 mb-2">
+              <strong>Edad:</strong> {{ mascota.edad }}
+            </div>
+            <div class="col-6 mb-2">
+              <strong>Sexo:</strong> {{ mascota.sexo }}
+            </div>
+            <div class="col-6 mb-2">
+              <strong>Tamaño:</strong> {{ mascota.tamano }}
+            </div>
+            <div class="col-6 mb-2">
+              <span class="badge" [class.bg-success]="mascota.vacunado" [class.bg-warning]="!mascota.vacunado">
+                <i class="fas fa-syringe me-1"></i>
+                {{ mascota.vacunado ? 'Vacunado' : 'Pendiente' }}
+              </span>
+            </div>
+            <div class="col-6 mb-2">
+              <span class="badge" [class.bg-success]="mascota.esterilizado" [class.bg-warning]="!mascota.esterilizado">
+                <i class="fas fa-cut me-1"></i>
+                {{ mascota.esterilizado ? 'Esterilizado' : 'Pendiente' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Precio -->
+        <div class="precio-section mb-4">
+          <div class="d-flex align-items-center">
+            <span *ngIf="producto.enOferta" class="text-decoration-line-through text-muted me-3 fs-4">
+              ${{ producto.precio }}
+            </span>
+            <span class="fw-bold display-6" [class.text-danger]="producto.enOferta">
+              ${{ obtenerPrecioFinal() }}
+            </span>
+          </div>
+          <small class="text-muted">
+            {{ esMascota() ? 'Costo de adopción' : 'Precio unitario' }}
+          </small>
+        </div>
+
+        <!-- Stock -->
+        <div class="mb-4">
+          <p class="mb-1">
+            <strong>Stock disponible:</strong>
+            <span [class.text-danger]="producto.stock === 0"
+                  [class.text-warning]="producto.stock <= 5 && producto.stock > 0"
+                  [class.text-success]="producto.stock > 5">
+              {{ producto.stock }} unidades
+            </span>
+          </p>
+        </div>
+
+        <!-- Selector de cantidad y compra -->
+        <div *ngIf="puedeComprar() && producto.stock > 0" class="mb-4">
+          <h5>Cantidad:</h5>
+          <div class="d-flex align-items-center mb-3">
+            <div class="input-group" style="max-width: 150px;">
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                (click)="decrementarCantidad()"
+                [disabled]="cantidad <= 1">
+                <i class="fas fa-minus"></i>
+              </button>
+              <input
+                type="number"
+                class="form-control text-center"
+                [(ngModel)]="cantidad"
+                [min]="1"
+                [max]="producto.stock"
+                readonly>
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                (click)="incrementarCantidad()"
+                [disabled]="cantidad >= producto.stock">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Precio total -->
+          <p class="fw-bold fs-5">
+            Total: <span class="text-success">${{ obtenerPrecioTotal() }}</span>
+          </p>
+        </div>
+
+        <!-- Información en carrito -->
+        <div *ngIf="estaEnCarrito()" class="alert alert-info mb-4">
+          <i class="fas fa-shopping-cart me-2"></i>
+          Ya tienes <strong>{{ getCantidadEnCarrito() }}</strong> unidades en tu carrito
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="d-grid gap-2 d-md-flex">
+          <!-- Botón volver -->
+          <button
+            type="button"
+            class="btn btn-outline-secondary me-md-2"
+            (click)="volver()">
+            <i class="fas fa-arrow-left me-2"></i>
+            Volver
+          </button>
+
+          <!-- Botón agregar al carrito para usuarios logueados -->
+          <button
+            *ngIf="puedeComprar()"
+            type="button"
+            class="btn btn-success btn-lg flex-fill"
+            (click)="agregarAlCarrito()"
+            [disabled]="producto.stock === 0">
+            <i class="fas fa-cart-plus me-2"></i>
+            {{ producto.stock === 0 ? 'No Disponible' : (esMascota() ? 'Agregar a Mi Lista' : 'Agregar al Carrito') }}
+          </button>
+
+          <!-- Mensaje para usuarios no registrados -->
+          <div *ngIf="!isAuthenticated()" class="alert alert-warning mb-0">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <a routerLink="/login" class="alert-link">Inicia sesión</a>
+            o <a routerLink="/register" class="alert-link">regístrate</a>
+            para poder comprar
+          </div>
+
+          <!-- Mensaje para usuarios registrados pero sin permisos de compra -->
+          <div *ngIf="isAuthenticated() && !puedeComprar()" class="alert alert-info mb-0">
+            <i class="fas fa-info-circle me-2"></i>
+            Contacta con el administrador para habilitar las compras
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Productos relacionados -->
+  <div *ngIf="!isLoading && producto" class="row mt-5">
+    <div class="col-12">
+      <h3 class="mb-4">
+        <i class="fas fa-heart me-2 text-danger"></i>
+        También te puede interesar
+      </h3>
+      <p class="text-muted">Explora más productos de la categoría {{ producto.categoria | titlecase }}</p>
+      <div class="text-center">
+        <a [routerLink]="['/' + producto.categoria]" class="btn btn-outline-primary">
+          <i class="fas fa-eye me-2"></i>
+          Ver más productos de {{ producto.categoria | titlecase }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

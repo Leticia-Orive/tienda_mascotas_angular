@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ProductoService } from '../../services/producto.service';
 import { CarritoService } from '../../services/carrito.service';
+import { AuthService } from '../../services/auth.service';
 import { Producto, Categoria } from '../../models/producto.model';
 
 @Component({
@@ -17,7 +18,8 @@ export class MascotasComponent implements OnInit {
 
   constructor(
     private productoService: ProductoService,
-    private carritoService: CarritoService
+    private carritoService: CarritoService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -73,5 +75,22 @@ export class MascotasComponent implements OnInit {
 
   estaEsterilizado(mascota: any): boolean {
     return mascota.esterilizado || false;
+  }
+
+  // Métodos para verificar permisos
+  puedeComprar(): boolean {
+    return this.authService.tienePermiso('puedeComprar');
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  isNoRegistrado(): boolean {
+    return this.authService.isNoRegistrado();
+  }
+
+  mostrarMensajeRegistro(): void {
+    alert('Debes registrarte para poder adoptar mascotas. ¡Haz clic en "Registrarse" en el menú!');
   }
 }

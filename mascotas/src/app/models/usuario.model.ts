@@ -6,6 +6,22 @@ export interface Usuario {
   telefono?: string;
   direccion?: string;
   fechaRegistro: Date;
+  rol: TipoUsuario;
+  activo: boolean;
+}
+
+export enum TipoUsuario {
+  ADMIN = 'admin',
+  CLIENTE = 'cliente',
+  NO_REGISTRADO = 'no_registrado'
+}
+
+export interface PermisoUsuario {
+  puedeVerPanel: boolean;
+  puedeGestionarProductos: boolean;
+  puedeGestionarUsuarios: boolean;
+  puedeComprar: boolean;
+  puedeVerHistorial: boolean;
 }
 
 export interface LoginRequest {
@@ -21,6 +37,7 @@ export interface RegisterRequest {
   confirmPassword: string;
   telefono?: string;
   direccion?: string;
+  rol?: TipoUsuario; // Por defecto será CLIENTE
 }
 
 export interface AuthResponse {

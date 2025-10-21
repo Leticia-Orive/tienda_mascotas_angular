@@ -1,0 +1,56 @@
+<div class="container-fluid py-4">
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="bg-gradient-warning text-white rounded-4 p-5 text-center position-relative overflow-hidden">
+        <div class="position-absolute top-0 start-0 w-100 h-100 opacity-10">
+          <i class="fas fa-rabbit" style="font-size: 15rem; position: absolute; right: -2rem; top: -2rem;"></i>
+        </div>
+        <div class="position-relative">
+          <h1 class="display-4 fw-bold mb-3"><i class="fas fa-rabbit me-3"></i>Conejos</h1>
+          <p class="lead mb-0">Compañeros tiernos y juguetones</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h2 class="h4 mb-0"><i class="fas fa-paw me-2 text-warning"></i>Conejos Disponibles
+        <span class="badge bg-warning ms-2">{{ productosFiltrados.length }}</span>
+      </h2>
+    </div>
+    <div class="col-md-4">
+      <select class="form-select" [(ngModel)]="filtroOrden" (change)="onFiltroChange()">
+        <option value="nombre">Nombre A-Z</option>
+        <option value="precio-asc">Precio: Menor a Mayor</option>
+        <option value="precio-desc">Precio: Mayor a Menor</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="productosFiltrados.length > 0; else noProductos">
+    <div class="col-lg-4 col-md-6 mb-4" *ngFor="let producto of productosFiltrados">
+      <div class="card h-100 shadow-sm hover-shadow">
+        <img [src]="producto.imagen" [alt]="producto.nombre" class="card-img-top" style="height: 250px; object-fit: cover;">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title text-warning fw-bold">{{ producto.nombre }}</h5>
+          <p class="card-text text-muted flex-grow-1">{{ producto.descripcion }}</p>
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <span class="h4 text-warning fw-bold">${{ producto.precio }}</span>
+            <div class="btn-group">
+              <button class="btn btn-outline-warning btn-sm" [routerLink]="['/producto', producto.id]">Ver</button>
+              <button class="btn btn-warning btn-sm" *ngIf="puedeAgregarAlCarrito()" (click)="agregarAlCarrito(producto)">Adoptar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noProductos>
+    <div class="text-center py-5">
+      <i class="fas fa-rabbit fa-4x text-muted mb-3"></i>
+      <h3 class="text-muted">No hay conejos disponibles</h3>
+    </div>
+  </ng-template>
+</div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
-import { Usuario, LoginRequest, RegisterRequest, AuthResponse } from '../models/usuario.model';
+import { Usuario, LoginRequest, RegisterRequest, AuthResponse, TipoUsuario, PermisoUsuario } from '../models/usuario.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +20,27 @@ export class AuthService {
       email: 'admin@tienda.com',
       telefono: '123456789',
       direccion: 'Calle Principal 123',
-      fechaRegistro: new Date('2024-01-01')
+      fechaRegistro: new Date('2024-01-01'),
+      rol: TipoUsuario.ADMIN,
+      activo: true
+    },
+    {
+      id: 2,
+      nombre: 'Cliente',
+      apellido: 'Ejemplo',
+      email: 'cliente@ejemplo.com',
+      telefono: '987654321',
+      direccion: 'Avenida Secundaria 456',
+      fechaRegistro: new Date('2024-02-15'),
+      rol: TipoUsuario.CLIENTE,
+      activo: true
     }
   ];
 
   // Simulación de contraseñas (en producción esto estaría en el backend)
   private credenciales = new Map<string, string>([
-    ['admin@tienda.com', 'admin123']
+    ['admin@tienda.com', 'admin123'],
+    ['cliente@ejemplo.com', 'cliente123']
   ]);
 
   constructor() {
@@ -72,7 +86,7 @@ export class AuthService {
   }
 
   register(registerData: RegisterRequest): Observable<AuthResponse> {
-    const { nombre, apellido, email, password, confirmPassword, telefono, direccion } = registerData;
+    const { nombre, apellido, email, password, confirmPassword, telefono, direccion, rol } = registerData;
 
     // Validaciones
     if (password !== confirmPassword) {
@@ -91,7 +105,9 @@ export class AuthService {
       email,
       telefono,
       direccion,
-      fechaRegistro: new Date()
+      fechaRegistro: new Date(),
+      rol: rol || TipoUsuario.CLIENTE, // Por defecto cliente
+      activo: true
     };
 
     // Agregar a la "base de datos" simulada
@@ -129,6 +145,64 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return this.currentUserSubject.value !== null;
+  }
+
+  // Métodos para manejo de roles
+  getCurrentUserRole(): TipoUsuario {
+    const usuario = this.getCurrentUser();
+    return usuario ? usuario.rol : TipoUsuario.NO_REGISTRADO;
+  }
+
+  isAdmin(): boolean {
+    return this.getCurrentUserRole() === TipoUsuario.ADMIN;
+  }
+
+  isCliente(): boolean {
+    return this.getCurrentUserRole() === TipoUsuario.CLIENTE;
+  }
+
+  isNoRegistrado(): boolean {
+    return this.getCurrentUserRole() === TipoUsuario.NO_REGISTRADO;
+  }
+
+  // Obtener permisos basados en el rol
+  getPermisos(): PermisoUsuario {
+    const rol = this.getCurrentUserRole();
+
+    switch (rol) {
+      case TipoUsuario.ADMIN:
+        return {
+          puedeVerPanel: true,
+          puedeGestionarProductos: true,
+          puedeGestionarUsuarios: true,
+          puedeComprar: true,
+          puedeVerHistorial: true
+        };
+
+      case TipoUsuario.CLIENTE:
+        return {
+          puedeVerPanel: false,
+          puedeGestionarProductos: false,
+          puedeGestionarUsuarios: false,
+          puedeComprar: true,
+          puedeVerHistorial: true
+        };
+
+      case TipoUsuario.NO_REGISTRADO:
+      default:
+        return {
+          puedeVerPanel: false,
+          puedeGestionarProductos: false,
+          puedeGestionarUsuarios: false,
+          puedeComprar: false,
+          puedeVerHistorial: false
+        };
+    }
+  }
+
+  // Verificar si el usuario tiene un permiso específico
+  tienePermiso(permiso: keyof PermisoUsuario): boolean {
+    return this.getPermisos()[permiso];
   }
 
   private generateToken(): string {
