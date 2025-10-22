@@ -1,3 +1,26 @@
+/**
+ * 👑 ADMIN PANEL COMPONENT - Panel de Administración
+ * ==================================================
+ *
+ * PROPÓSITO:
+ * - 🎛️ Centro de control principal para administradores
+ * - 📊 Dashboard con estadísticas de la tienda
+ * - 👥 Gestión de usuarios registrados
+ * - 📦 Gestión completa de productos (CRUD)
+ * - 🔒 Solo accesible para usuarios con rol ADMIN
+ *
+ * FUNCIONALIDADES:
+ * - ✅ Navegación por pestañas (Angular, no Bootstrap JS)
+ * - ✅ Estadísticas en tiempo real
+ * - ✅ Lista de usuarios con control de estado (activo/inactivo)
+ * - ✅ CRUD de productos con confirmaciones
+ * - ✅ Integración con ProductoService para persistencia
+ *
+ * SEGURIDAD:
+ * - 🛡️ Protegido por RoleGuard
+ * - 🔐 Solo admins pueden acceder
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -14,9 +37,16 @@ import { Producto } from '../../models/producto.model';
   styleUrl: './admin-panel.component.css'
 })
 export class AdminPanelComponent implements OnInit {
+
+  // 📊 DATOS DEL DASHBOARD
+  /** Lista de todos los usuarios registrados en el sistema */
   usuarios: Usuario[] = [];
+
+  /** Lista de todos los productos de la tienda */
   productos: Producto[] = [];
-  activeTab = 'productos'; // Pestaña activa por defecto
+
+  /** Control de pestañas sin dependencia de Bootstrap JS */
+  activeTab = 'productos'; // Valores: 'usuarios' | 'productos'
   estadisticas = {
     totalUsuarios: 0,
     totalClientes: 0,

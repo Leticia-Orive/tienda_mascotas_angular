@@ -1,13 +1,43 @@
+/**
+ * 🏪 PRODUCTO SERVICE - Servicio Principal de Gestión de Productos
+ * ================================================================
+ * 
+ * PROPÓSITO:
+ * - 🗄️ Gestiona todos los productos de la tienda (CRUD completo)
+ * - 💾 Implementa persistencia con localStorage
+ * - 🔄 Usa programación reactiva con RxJS
+ * - 🎯 Proporciona filtrado por categorías y subcategorías
+ * 
+ * FUNCIONALIDADES PRINCIPALES:
+ * - ✅ Crear productos nuevos (solo admins)
+ * - ✅ Leer/Obtener productos con filtros
+ * - ✅ Actualizar productos existentes (solo admins)
+ * - ✅ Eliminar productos (solo admins)
+ * - ✅ Filtrado por tipo de mascota (perros, gatos, etc.)
+ * - ✅ Persistencia automática en localStorage
+ * 
+ * PATRÓN DE DISEÑO: 
+ * - Repository Pattern para acceso a datos
+ * - Observable Pattern para notificaciones reactivas
+ * - Singleton (providedIn: 'root')
+ */
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Producto, Mascota, Categoria } from '../models/producto.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root' // Hace el servicio singleton en toda la app
 })
 export class ProductoService {
+  
+  // 📊 ESTADO REACTIVO: BehaviorSubject mantiene el estado actual de productos
   private productosSubject = new BehaviorSubject<Producto[]>([]);
+  
+  // 🔄 OBSERVABLE PÚBLICO: Los componentes se suscriben a este observable
   public productos$ = this.productosSubject.asObservable();
+  
+  // 🔑 CLAVE DE ALMACENAMIENTO: Identificador único para localStorage
   private readonly STORAGE_KEY = 'tienda_mascotas_productos';
 
   constructor() {

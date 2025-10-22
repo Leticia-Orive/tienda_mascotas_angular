@@ -1,3 +1,25 @@
+/**
+ * 🔐 AUTH SERVICE - Servicio de Autenticación y Autorización
+ * ==========================================================
+ *
+ * PROPÓSITO:
+ * - 🔑 Maneja login/logout de usuarios
+ * - 👥 Gestiona roles y permisos (Admin, Cliente, No Registrado)
+ * - 🛡️ Controla acceso a funcionalidades según rol
+ * - 💾 Persiste sesión del usuario
+ *
+ * ROLES IMPLEMENTADOS:
+ * - 👑 ADMIN: Acceso completo (CRUD productos, gestión usuarios)
+ * - 🛍️ CLIENTE: Puede comprar y usar carrito
+ * - 👤 NO_REGISTRADO: Solo visualización
+ *
+ * MÉTODOS PRINCIPALES:
+ * - login() / logout() / register()
+ * - isAdmin() / isCliente() / isNoRegistrado()
+ * - tienePermiso() - Control granular de permisos
+ * - getCurrentUser() - Usuario actual
+ */
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
@@ -7,9 +29,13 @@ import { Usuario, LoginRequest, RegisterRequest, AuthResponse, TipoUsuario, Perm
   providedIn: 'root'
 })
 export class AuthService {
+
+  // 👤 USUARIO ACTUAL: Mantiene el estado del usuario logueado
   private currentUserSubject = new BehaviorSubject<Usuario | null>(null);
+
+  // 🔄 OBSERVABLES PÚBLICOS: Para que los componentes reaccionen a cambios
   public currentUser$ = this.currentUserSubject.asObservable();
-  public isLoggedIn$ = this.currentUser$.pipe(map(user => !!user));
+  public isLoggedIn$ = this.currentUser$.pipe(map(user => !!user)); // Convierte usuario a boolean
 
   // Simulación de base de datos de usuarios
   private usuarios: Usuario[] = [

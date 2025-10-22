@@ -1,11 +1,32 @@
+<!--
+🐕 PÁGINA DE PERROS - VISTA HTML
+==================================
+
+PROPÓSITO:
+- Mostrar catálogo exclusivo de perros disponibles para adopción
+- Interfaz responsive con Bootstrap 5
+- Funcionalidades específicas según el rol del usuario
+
+SECCIONES:
+1. 🎨 Hero Section: Banner llamativo con gradiente azul
+2. 🔍 Filtros: Ordenamiento por nombre/precio con contador
+3. 📦 Catálogo: Grid responsive de cards de productos
+4. ℹ️ Información: Garantías y servicios adicionales
+-->
+
 <div class="container-fluid py-4">
-  <!-- Hero Section para Perros -->
+
+  <!-- 🎨 HERO SECTION: Banner principal con branding de perros -->
   <div class="row mb-5">
     <div class="col-12">
+      <!-- Gradiente azul con icono de perro de fondo -->
       <div class="bg-gradient-primary text-white rounded-4 p-5 text-center position-relative overflow-hidden">
+        <!-- Icono decorativo de fondo con transparencia -->
         <div class="position-absolute top-0 start-0 w-100 h-100 opacity-10">
           <i class="fas fa-dog" style="font-size: 15rem; position: absolute; right: -2rem; top: -2rem;"></i>
         </div>
+
+        <!-- Contenido principal del banner -->
         <div class="position-relative">
           <h1 class="display-4 fw-bold mb-3">
             <i class="fas fa-dog me-3"></i>
@@ -18,18 +39,27 @@
     </div>
   </div>
 
-  <!-- Filtros y Ordenamiento -->
+  <!-- 🔍 SECCIÓN DE FILTROS Y ORDENAMIENTO -->
   <div class="row mb-4">
+
+    <!-- Título con contador dinámico de productos -->
     <div class="col-md-8">
       <h2 class="h4 mb-0">
         <i class="fas fa-paw me-2 text-primary"></i>
         Nuestros Perros Disponibles
+        <!-- Badge que muestra el número actual de perros filtrados -->
         <span class="badge bg-primary ms-2">{{ productosFiltrados.length }}</span>
       </h2>
     </div>
+
+    <!-- Selector de ordenamiento -->
     <div class="col-md-4">
       <div class="d-flex align-items-center">
         <label class="form-label me-2 mb-0 text-nowrap">Ordenar por:</label>
+        <!--
+        📝 Two-way binding con ngModel para sincronizar con filtroOrden
+        📞 Event binding (change) para ejecutar onFiltroChange() cuando cambie
+        -->
         <select
           class="form-select form-select-sm"
           [(ngModel)]="filtroOrden"
@@ -42,11 +72,23 @@
     </div>
   </div>
 
-  <!-- Lista de Productos -->
+  <!-- 📦 CATÁLOGO DE PRODUCTOS: Grid responsive de cards -->
+  <!--
+  🔀 *ngIf estructural: Muestra productos SI hay resultados, SINO muestra template noProductos
+  📋 *ngFor estructural: Itera sobre cada producto en productosFiltrados
+  📱 Grid responsive: col-lg-4 (3 por fila en desktop), col-md-6 (2 por fila en tablet)
+  -->
   <div class="row" *ngIf="productosFiltrados.length > 0; else noProductos">
+
+    <!-- Card individual de producto -->
     <div class="col-lg-4 col-md-6 mb-4" *ngFor="let producto of productosFiltrados">
       <div class="card h-100 shadow-sm border-0 hover-shadow">
+
+        <!-- Imagen del producto con elementos superpuestos -->
         <div class="position-relative">
+          <!--
+          🖼️ Property binding: [src] y [alt] se actualizan dinámicamente
+          -->
           <img
             [src]="producto.imagen"
             [alt]="producto.nombre"
