@@ -16,7 +16,7 @@ import { Producto, Mascota } from '../../models/producto.model';
 export class ProductoDetalleComponent implements OnInit {
   producto?: Producto;
   isLoading = true;
-  cantidad = 1;
+  cantidad: number = 1;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,6 +40,7 @@ export class ProductoDetalleComponent implements OnInit {
     this.productoService.obtenerProductoPorId(id).subscribe({
       next: (producto) => {
         this.producto = producto;
+        this.cantidad = 1; // Reinicializar cantidad cuando se carga el producto
         this.isLoading = false;
 
         if (!producto) {
@@ -73,7 +74,28 @@ export class ProductoDetalleComponent implements OnInit {
     }
   }
 
-  obtenerPrecioFinal(): number {
+  validarCantidad(): void {
+    console.log('Validando cantidad:', this.cantidad, typeof this.cantidad);
+    
+    if (!this.producto) return;
+    
+    // Convertir a número si es string
+    if (typeof this.cantidad === 'string') {
+      this.cantidad = parseInt(this.cantidad, 10);
+    }
+    
+    // Asegurar que la cantidad sea un número válido
+    if (isNaN(this.cantidad) || this.cantidad < 1) {
+      this.cantidad = 1;
+    } else if (this.cantidad > this.producto.stock) {
+      this.cantidad = this.producto.stock;
+    } else {
+      // Asegurar que sea un número entero
+      this.cantidad = Math.floor(this.cantidad);
+    }
+    
+    console.log('Cantidad después de validar:', this.cantidad);
+  }  obtenerPrecioFinal(): number {
     if (!this.producto) return 0;
     return this.producto.enOferta && this.producto.precioOferta
       ? this.producto.precioOferta

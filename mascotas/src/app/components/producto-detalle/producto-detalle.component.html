@@ -128,7 +128,7 @@
 
         <!-- Selector de cantidad y compra -->
         <div *ngIf="puedeComprar() && producto.stock > 0" class="mb-4">
-          <h5>Cantidad:</h5>
+          <h5>Cantidad: (Debug: {{ cantidad }})</h5>
           <div class="d-flex align-items-center mb-3">
             <div class="input-group" style="max-width: 150px;">
               <button
@@ -142,9 +142,13 @@
                 type="number"
                 class="form-control text-center"
                 [(ngModel)]="cantidad"
+                [value]="cantidad"
                 [min]="1"
                 [max]="producto.stock"
-                readonly>
+                step="1"
+                (input)="validarCantidad()"
+                (blur)="validarCantidad()"
+                placeholder="1">
               <button
                 class="btn btn-outline-secondary"
                 type="button"

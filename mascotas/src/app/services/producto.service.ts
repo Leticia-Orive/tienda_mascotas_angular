@@ -8,14 +8,21 @@ import { Producto, Mascota, Categoria } from '../models/producto.model';
 export class ProductoService {
   private productosSubject = new BehaviorSubject<Producto[]>([]);
   public productos$ = this.productosSubject.asObservable();
+  private readonly STORAGE_KEY = 'tienda_mascotas_productos';
 
   constructor() {
     this.cargarProductosIniciales();
   }
 
   private cargarProductosIniciales(): void {
-    // Cargar desde archivo JSON o generar datos básicos
-    this.cargarDatosDesdeJSON();
+    // Intentar cargar desde localStorage primero
+    const productosGuardados = this.cargarDesdeLocalStorage();
+    if (productosGuardados.length > 0) {
+      this.productosSubject.next(productosGuardados);
+    } else {
+      // Si no hay datos guardados, cargar datos iniciales
+      this.cargarDatosDesdeJSON();
+    }
   }
 
   private cargarDatosDesdeJSON(): void {
@@ -416,7 +423,8 @@ export class ProductoService {
       }
     ];
 
-    this.productosSubject.next(productos);
+    // Guardar los productos iniciales en localStorage y actualizar el Subject
+    this.actualizarYGuardar(productos);
   }
 
   obtenerProductos(): Observable<Producto[]> {
@@ -539,7 +547,7 @@ export class ProductoService {
     };
 
     const productosActualizados = [...productos, nuevoProducto];
-    this.productosSubject.next(productosActualizados);
+    this.actualizarYGuardar(productosActualizados);
 
     return of(nuevoProducto);
   }
@@ -558,9 +566,35 @@ export class ProductoService {
 
     const productosActualizados = [...productos];
     productosActualizados[index] = productoActualizado;
-    this.productosSubject.next(productosActualizados);
+    this.actualizarYGuardar(productosActualizados);
 
     return of(productoActualizado);
+  }
+
+  // Métodos para LocalStorage
+  private cargarDesdeLocalStorage(): Producto[] {
+    try {
+      const productosJson = localStorage.getItem(this.STORAGE_KEY);
+      if (productosJson) {
+        return JSON.parse(productosJson);
+      }
+    } catch (error) {
+      console.error('Error al cargar productos desde localStorage:', error);
+    }
+    return [];
+  }
+
+  private guardarEnLocalStorage(productos: Producto[]): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(productos));
+    } catch (error) {
+      console.error('Error al guardar productos en localStorage:', error);
+    }
+  }
+
+  private actualizarYGuardar(productos: Producto[]): void {
+    this.productosSubject.next(productos);
+    this.guardarEnLocalStorage(productos);
   }
 
   // Eliminar producto
@@ -573,7 +607,7 @@ export class ProductoService {
     }
 
     const productosActualizados = productos.filter(p => p.id !== id);
-    this.productosSubject.next(productosActualizados);
+    this.actualizarYGuardar(productosActualizados);
 
     return of(true);
   }
@@ -582,5 +616,16 @@ export class ProductoService {
   obtenerSiguienteId(): number {
     const productos = this.productosSubject.value;
     return productos.length > 0 ? Math.max(...productos.map(p => p.id)) + 1 : 1;
+  }
+
+  // Limpiar localStorage y recargar datos iniciales
+  resetearProductos(): void {
+    localStorage.removeItem(this.STORAGE_KEY);
+    this.cargarDatosDesdeJSON();
+  }
+
+  // Método para exportar datos (útil para backup)
+  exportarProductos(): string {
+    return JSON.stringify(this.productosSubject.value, null, 2);
   }
 }
