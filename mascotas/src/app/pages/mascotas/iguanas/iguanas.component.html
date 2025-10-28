@@ -3,8 +3,9 @@
     <div class="col-12">
       <div class="bg-gradient-secondary text-white rounded-4 p-5 text-center position-relative overflow-hidden">
         <div class="position-relative">
-          <h1 class="display-4 fw-bold mb-3"><i class="fas fa-dragon me-3"></i>Iguanas y Reptiles</h1>
+          <h1 class="display-4 fw-bold mb-3"><i class="fas fa-dragon me-3"></i>Reptiles y Tortugas</h1>
           <p class="lead mb-0">Exóticos compañeros de sangre fría</p>
+          <p class="mb-0">Iguanas, geckos, tortugas terrestres y acuáticas</p>
         </div>
       </div>
     </div>
@@ -36,7 +37,7 @@
             <span class="h4 text-secondary fw-bold">${{ producto.precio }}</span>
             <div class="btn-group">
               <button class="btn btn-outline-secondary btn-sm" [routerLink]="['/producto', producto.id]">Ver</button>
-              <button class="btn btn-secondary btn-sm" *ngIf="puedeAgregarAlCarrito()" (click)="agregarAlCarrito(producto)">Adoptar</button>
+              <button class="btn btn-secondary btn-sm" *ngIf="puedeAgregarAlCarrito()" (click)="agregarAlCarrito(producto)">Comprar</button>
             </div>
           </div>
         </div>
@@ -47,7 +48,8 @@
   <ng-template #noProductos>
     <div class="text-center py-5">
       <i class="fas fa-dragon fa-4x text-muted mb-3"></i>
-      <h3 class="text-muted">No hay reptiles disponibles</h3>
+      <h3 class="text-muted">No hay reptiles o tortugas disponibles</h3>
+      <p class="text-muted">Pronto tendremos nuevos compañeros exóticos disponibles.</p>
     </div>
   </ng-template>
 </div>

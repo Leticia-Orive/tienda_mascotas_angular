@@ -1,13 +1,13 @@
 /**
  * 🏪 PRODUCTO SERVICE - Servicio Principal de Gestión de Productos
  * ================================================================
- * 
+ *
  * PROPÓSITO:
  * - 🗄️ Gestiona todos los productos de la tienda (CRUD completo)
  * - 💾 Implementa persistencia con localStorage
  * - 🔄 Usa programación reactiva con RxJS
  * - 🎯 Proporciona filtrado por categorías y subcategorías
- * 
+ *
  * FUNCIONALIDADES PRINCIPALES:
  * - ✅ Crear productos nuevos (solo admins)
  * - ✅ Leer/Obtener productos con filtros
@@ -15,8 +15,8 @@
  * - ✅ Eliminar productos (solo admins)
  * - ✅ Filtrado por tipo de mascota (perros, gatos, etc.)
  * - ✅ Persistencia automática en localStorage
- * 
- * PATRÓN DE DISEÑO: 
+ *
+ * PATRÓN DE DISEÑO:
  * - Repository Pattern para acceso a datos
  * - Observable Pattern para notificaciones reactivas
  * - Singleton (providedIn: 'root')
@@ -30,13 +30,13 @@ import { Producto, Mascota, Categoria } from '../models/producto.model';
   providedIn: 'root' // Hace el servicio singleton en toda la app
 })
 export class ProductoService {
-  
+
   // 📊 ESTADO REACTIVO: BehaviorSubject mantiene el estado actual de productos
   private productosSubject = new BehaviorSubject<Producto[]>([]);
-  
+
   // 🔄 OBSERVABLE PÚBLICO: Los componentes se suscriben a este observable
   public productos$ = this.productosSubject.asObservable();
-  
+
   // 🔑 CLAVE DE ALMACENAMIENTO: Identificador único para localStorage
   private readonly STORAGE_KEY = 'tienda_mascotas_productos';
 
@@ -322,6 +322,51 @@ export class ProductoService {
         vacunado: false,
         esterilizado: false
       } as Mascota,
+      {
+        id: 119,
+        nombre: 'Tortuga de Orejas Rojas',
+        descripcion: 'Tortuga acuática juvenil, perfecta para acuarios grandes.',
+        precio: 80,
+        imagen: 'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=300&h=300&fit=crop',
+        categoria: Categoria.MASCOTAS,
+        stock: 4,
+        raza: 'Trachemys scripta elegans',
+        edad: '1 año',
+        sexo: 'Hembra',
+        tamano: 'Pequeño',
+        vacunado: false,
+        esterilizado: false
+      } as Mascota,
+      {
+        id: 120,
+        nombre: 'Tortuga Rusa',
+        descripcion: 'Tortuga terrestre pequeña, ideal para principiantes.',
+        precio: 120,
+        imagen: 'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=300&h=300&fit=crop',
+        categoria: Categoria.MASCOTAS,
+        stock: 2,
+        raza: 'Testudo horsfieldii',
+        edad: '2 años',
+        sexo: 'Macho',
+        tamano: 'Pequeño',
+        vacunado: false,
+        esterilizado: false
+      } as Mascota,
+      {
+        id: 121,
+        nombre: 'Tortuga Mediterránea',
+        descripcion: 'Tortuga terrestre mediterránea, longeva y resistente.',
+        precio: 200,
+        imagen: 'https://images.unsplash.com/photo-1602491673980-73aa38de027a?w=300&h=300&fit=crop',
+        categoria: Categoria.MASCOTAS,
+        stock: 1,
+        raza: 'Testudo hermanni',
+        edad: '5 años',
+        sexo: 'Hembra',
+        tamano: 'Mediano',
+        vacunado: false,
+        esterilizado: false
+      } as Mascota,
 
       // AVES
       {
@@ -366,6 +411,113 @@ export class ProductoService {
         edad: '2 años',
         sexo: 'Hembra',
         tamano: 'Mediano',
+        vacunado: false,
+        esterilizado: false
+      } as Mascota,
+
+      // ROEDORES
+      {
+        id: 122,
+        nombre: 'Hámster Dorado Sirio',
+        descripcion: 'Hámster dorado adulto, muy dócil y fácil de cuidar.',
+        precio: 25,
+        imagen: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=300&h=300&fit=crop',
+        categoria: Categoria.MASCOTAS,
+        stock: 8,
+        raza: 'Hámster Sirio Dorado',
+        edad: '6 meses',
+        sexo: 'Macho',
+        tamano: 'Pequeño',
+        vacunado: false,
+        esterilizado: false
+      } as Mascota,
+      {
+        id: 123,
+        nombre: 'Hámster Ruso Enano',
+        descripcion: 'Pequeño hámster ruso, perfecto para principiantes.',
+        precio: 20,
+        imagen: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?w=300&h=300&fit=crop',
+        categoria: Categoria.MASCOTAS,
+        stock: 10,
+        raza: 'Hámster Ruso',
+        edad: '4 meses',
+        sexo: 'Hembra',
+        tamano: 'Pequeño',
+        vacunado: false,
+        esterilizado: false
+      } as Mascota,
+      {
+        id: 124,
+        nombre: 'Hámster Chino Rayado',
+        descripcion: 'Hámster chino con características rayas dorsales.',
+        precio: 30,
+        imagen: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=300&fit=crop',
+        categoria: Categoria.MASCOTAS,
+        stock: 5,
+        raza: 'Hámster Chino',
+        edad: '5 meses',
+        sexo: 'Macho',
+        tamano: 'Pequeño',
+        vacunado: false,
+        esterilizado: false
+      } as Mascota,
+      {
+        id: 125,
+        nombre: 'Chinchilla Gris Estándar',
+        descripcion: 'Chinchilla de pelo suave y denso, muy activa.',
+        precio: 150,
+        imagen: 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=300&h=300&fit=crop',
+        categoria: Categoria.MASCOTAS,
+        stock: 3,
+        raza: 'Chinchilla Lanigera',
+        edad: '1 año',
+        sexo: 'Hembra',
+        tamano: 'Mediano',
+        vacunado: false,
+        esterilizado: false
+      } as Mascota,
+      {
+        id: 126,
+        nombre: 'Hámster Roborovski',
+        descripcion: 'El hámster más pequeño del mundo, muy activo y rápido.',
+        precio: 35,
+        imagen: 'https://images.unsplash.com/photo-1589652717521-10c0d092dea9?w=300&h=300&fit=crop',
+        categoria: Categoria.MASCOTAS,
+        stock: 6,
+        raza: 'Roborovski',
+        edad: '3 meses',
+        sexo: 'Hembra',
+        tamano: 'Pequeño',
+        vacunado: false,
+        esterilizado: false
+      } as Mascota,
+      {
+        id: 127,
+        nombre: 'Hámster Campbell',
+        descripcion: 'Hámster Campbell sociable, ideal para tener en parejas.',
+        precio: 28,
+        imagen: 'https://images.unsplash.com/photo-1567016432779-094069958ea5?w=300&h=300&fit=crop',
+        categoria: Categoria.MASCOTAS,
+        stock: 12,
+        raza: 'Campbell',
+        edad: '5 meses',
+        sexo: 'Macho',
+        tamano: 'Pequeño',
+        vacunado: false,
+        esterilizado: false
+      } as Mascota,
+      {
+        id: 128,
+        nombre: 'Jerbo del Desierto',
+        descripcion: 'Roedor saltarín del desierto, muy curioso y activo.',
+        precio: 45,
+        imagen: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop',
+        categoria: Categoria.MASCOTAS,
+        stock: 4,
+        raza: 'Jerbo Mongol',
+        edad: '8 meses',
+        sexo: 'Hembra',
+        tamano: 'Pequeño',
         vacunado: false,
         esterilizado: false
       } as Mascota,
@@ -488,7 +640,15 @@ export class ProductoService {
       case 'peces':
         return of(mascotas.filter(m => this.esPez(m)));
       case 'iguanas':
-        return of(mascotas.filter(m => this.esIguana(m)));
+      case 'reptiles':
+      case 'tortugas':
+        return of(mascotas.filter(m => this.esReptil(m)));
+      case 'roedores':
+      case 'hamsters':
+        console.log('Buscando roedores. Total mascotas:', mascotas.length);
+        const roedores = mascotas.filter(m => this.esRoedor(m));
+        console.log('Roedores encontrados:', roedores);
+        return of(roedores);
       case 'aves':
         return of(mascotas.filter(m => this.esAve(m)));
       default:
@@ -536,14 +696,41 @@ export class ProductoService {
            raza.includes('goldfish') || raza.includes('neón');
   }
 
-  private esIguana(mascota: Producto): boolean {
+  private esReptil(mascota: Producto): boolean {
     const nombre = mascota.nombre.toLowerCase();
     const desc = mascota.descripcion.toLowerCase();
     const raza = (mascota as any).raza?.toLowerCase() || '';
 
     return nombre.includes('iguana') || nombre.includes('gecko') ||
-           desc.includes('iguana') || desc.includes('reptil') ||
-           raza.includes('iguana') || raza.includes('gecko');
+           nombre.includes('tortuga') || desc.includes('iguana') ||
+           desc.includes('reptil') || desc.includes('tortuga') ||
+           desc.includes('acuática') || desc.includes('terrestre') ||
+           raza.includes('iguana') || raza.includes('gecko') ||
+           raza.includes('testudo') || raza.includes('trachemys');
+  }
+
+  private esRoedor(mascota: Producto): boolean {
+    const nombre = mascota.nombre.toLowerCase();
+    const desc = mascota.descripcion.toLowerCase();
+    const raza = (mascota as any).raza?.toLowerCase() || '';
+
+    const esRoedor = nombre.includes('hámster') || nombre.includes('hamster') ||
+           nombre.includes('chinchilla') || nombre.includes('jerbo') ||
+           nombre.includes('ratón') || nombre.includes('roedor') ||
+           desc.includes('hámster') || desc.includes('hamster') ||
+           desc.includes('chinchilla') || desc.includes('jerbo') ||
+           desc.includes('ratón') || desc.includes('roedor') ||
+           desc.includes('dócil') || desc.includes('pequeño') ||
+           raza.includes('hámster') || raza.includes('hamster') ||
+           raza.includes('dorado') || raza.includes('ruso') ||
+           raza.includes('chino') || raza.includes('sirio') ||
+           raza.includes('chinchilla') || raza.includes('jerbo');
+
+    if (esRoedor) {
+      console.log(`${mascota.nombre} es un roedor`);
+    }
+
+    return esRoedor;
   }
 
   private esAve(mascota: Producto): boolean {

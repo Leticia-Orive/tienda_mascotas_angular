@@ -1,11 +1,11 @@
 /**
  * 🐕 COMPONENTE PERROS
- * 
+ *
  * PROPÓSITO:
  * - Mostrar exclusivamente productos de la subcategoría "Perros"
  * - Filtrar mascotas por razas caninas específicas
- * - Permitir a los clientes ver y adoptar perros disponibles
- * 
+ * - Permitir a los clientes ver y comprar perros disponibles
+ *
  * FUNCIONALIDADES:
  * - ✅ Carga productos desde ProductoService
  * - ✅ Filtra solo perros usando múltiples criterios (nombre, raza, descripción)
@@ -13,7 +13,7 @@
  * - ✅ Integración con carrito de compras para clientes
  * - ✅ Control de acceso según rol de usuario
  * - ✅ Interfaz responsive con Bootstrap
- * 
+ *
  * ROLES QUE PUEDEN ACCEDER:
  * - 👑 Admin: Ve todos los perros + puede gestionarlos
  * - 🛍️ Cliente: Ve perros + puede agregarlos al carrito
@@ -40,15 +40,15 @@ import { Producto, Categoria } from '../../../models/producto.model';
   styleUrl: './perros.component.css'
 })
 export class PerrosComponent implements OnInit {
-  
+
   // 📊 PROPIEDADES DEL COMPONENTE
-  
+
   /** Lista completa de productos de perros cargados desde la base de datos */
   productos: Producto[] = [];
-  
+
   /** Lista filtrada y ordenada que se muestra en el HTML */
   productosFiltrados: Producto[] = [];
-  
+
   /** Criterio de ordenamiento seleccionado por el usuario */
   filtroOrden = 'nombre'; // Valores: 'nombre', 'precio-asc', 'precio-desc'
 
@@ -56,10 +56,10 @@ export class PerrosComponent implements OnInit {
   constructor(
     /** Servicio para obtener productos de la base de datos/localStorage */
     private productoService: ProductoService,
-    
+
     /** Servicio para manejar el carrito de compras */
     private carritoService: CarritoService,
-    
+
     /** Servicio público para verificar roles y permisos en el HTML */
     public authService: AuthService
   ) {}
@@ -124,7 +124,7 @@ export class PerrosComponent implements OnInit {
 
   // 🏷️ HELPER METHODS: Métodos auxiliares para acceder a propiedades específicas de mascotas
   // Estos métodos permiten acceder a propiedades del tipo Mascota de forma type-safe
-  
+
   /** Obtiene la raza del perro (ej: "Golden Retriever", "Pastor Alemán") */
   getMascotaRaza(producto: Producto): string | undefined {
     return (producto as any).raza;

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CarritoService } from '../../services/carrito.service';
 import { AuthService } from '../../services/auth.service';
 import { Carrito, ItemCarrito } from '../../models/carrito.model';
+import { MetodoPago, DatosPago } from '../../models/pago.model';
 
 @Component({
   selector: 'app-carrito',
@@ -16,6 +17,22 @@ export class CarritoComponent implements OnInit {
   carrito: Carrito = { items: [], total: 0, cantidadItems: 0 };
   isLoggedIn = false;
   mostrarResumenCompra = false;
+  mostrarFormularioPago = false;
+
+  // Opciones de pago
+  MetodoPago = MetodoPago;
+  metodoPagoSeleccionado: MetodoPago | null = null;
+
+  // Datos del formulario de pago
+  datosPago: DatosPago = {
+    metodo: MetodoPago.EFECTIVO,
+    numeroTarjeta: '',
+    nombreTitular: '',
+    fechaVencimiento: '',
+    cvv: '',
+    direccionEntrega: '',
+    telefonoContacto: ''
+  };
 
   constructor(
     private carritoService: CarritoService,
@@ -61,19 +78,73 @@ export class CarritoComponent implements OnInit {
       return;
     }
 
+    // Mostrar selección de método de pago
+    this.mostrarFormularioPago = true;
+  }
+
+  seleccionarMetodoPago(metodo: MetodoPago): void {
+    this.metodoPagoSeleccionado = metodo;
+    this.datosPago.metodo = metodo;
+  }
+
+  continuarConPago(): void {
+    if (!this.metodoPagoSeleccionado) {
+      alert('Por favor selecciona un método de pago');
+      return;
+    }
+
+    // Validar datos según el método de pago
+    if (this.metodoPagoSeleccionado === MetodoPago.TARJETA) {
+      if (!this.datosPago.numeroTarjeta || !this.datosPago.nombreTitular ||
+          !this.datosPago.fechaVencimiento || !this.datosPago.cvv) {
+        alert('Por favor completa todos los datos de la tarjeta');
+        return;
+      }
+    } else if (this.metodoPagoSeleccionado === MetodoPago.EFECTIVO) {
+      if (!this.datosPago.direccionEntrega || !this.datosPago.telefonoContacto) {
+        alert('Por favor proporciona la dirección de entrega y teléfono de contacto');
+        return;
+      }
+    }
+
+    this.mostrarFormularioPago = false;
     this.mostrarResumenCompra = true;
   }
 
   confirmarCompra(): void {
-    // Aquí implementarías la lógica de procesamiento de pago
-    // Por ahora, simulamos una compra exitosa
-    alert('¡Compra realizada con éxito! Gracias por tu compra.');
+    const metodoPagoTexto = this.metodoPagoSeleccionado === MetodoPago.EFECTIVO ? 'efectivo' : 'tarjeta';
+
+    if (this.metodoPagoSeleccionado === MetodoPago.EFECTIVO) {
+      alert(`¡Compra confirmada! 💵\n\nMétodo de pago: Efectivo (Pago contra entrega)\nDirección: ${this.datosPago.direccionEntrega}\nTeléfono: ${this.datosPago.telefonoContacto}\nTotal: $${this.carrito.total}\n\n¡Gracias por tu compra! Te contactaremos pronto.`);
+    } else {
+      const tarjetaOculta = '****-****-****-' + this.datosPago.numeroTarjeta?.slice(-4);
+      alert(`¡Compra confirmada! 💳\n\nMétodo de pago: Tarjeta ${tarjetaOculta}\nTitular: ${this.datosPago.nombreTitular}\nTotal: $${this.carrito.total}\n\n¡Gracias por tu compra! Recibirás un email de confirmación.`);
+    }
+
     this.carritoService.limpiarCarrito();
     this.mostrarResumenCompra = false;
+    this.mostrarFormularioPago = false;
+    this.metodoPagoSeleccionado = null;
+    this.resetearDatosPago();
   }
 
   cancelarCompra(): void {
     this.mostrarResumenCompra = false;
+    this.mostrarFormularioPago = false;
+    this.metodoPagoSeleccionado = null;
+    this.resetearDatosPago();
+  }
+
+  private resetearDatosPago(): void {
+    this.datosPago = {
+      metodo: MetodoPago.EFECTIVO,
+      numeroTarjeta: '',
+      nombreTitular: '',
+      fechaVencimiento: '',
+      cvv: '',
+      direccionEntrega: '',
+      telefonoContacto: ''
+    };
   }
 
   obtenerPrecioFinal(item: ItemCarrito): number {

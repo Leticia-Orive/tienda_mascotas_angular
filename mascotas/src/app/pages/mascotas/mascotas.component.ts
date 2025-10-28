@@ -91,6 +91,6 @@ export class MascotasComponent implements OnInit {
   }
 
   mostrarMensajeRegistro(): void {
-    alert('Debes registrarte para poder adoptar mascotas. ¡Haz clic en "Registrarse" en el menú!');
+    alert('Debes registrarte para poder comprar mascotas. ¡Haz clic en "Registrarse" en el menú!');
   }
 }

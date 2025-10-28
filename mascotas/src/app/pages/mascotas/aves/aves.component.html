@@ -34,7 +34,7 @@
             <span class="h4 text-danger fw-bold">${{ producto.precio }}</span>
             <div class="btn-group">
               <button class="btn btn-outline-danger btn-sm" [routerLink]="['/producto', producto.id]">Ver</button>
-              <button class="btn btn-danger btn-sm" *ngIf="puedeAgregarAlCarrito()" (click)="agregarAlCarrito(producto)">Adoptar</button>
+              <button class="btn btn-danger btn-sm" *ngIf="puedeAgregarAlCarrito()" (click)="agregarAlCarrito(producto)">Comprar</button>
             </div>
           </div>
         </div>

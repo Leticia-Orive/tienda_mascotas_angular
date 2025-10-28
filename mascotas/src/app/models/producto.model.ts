@@ -47,7 +47,7 @@ export interface Mascota extends Producto {
  * Define las 5 categorías principales de la tienda
  */
 export enum Categoria {
-  MASCOTAS = 'mascotas',           // Animales para adopción
+  MASCOTAS = 'mascotas',           // Animales para compra
   ALIMENTACION = 'alimentacion',   // Comida y suplementos
   ACCESORIOS = 'accesorios',       // Collares, correas, camas, etc.
   JUGUETES = 'juguetes',           // Entretenimiento para mascotas

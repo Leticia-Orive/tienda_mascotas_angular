@@ -1,0 +1,130 @@
+<!--
+🐹 PÁGINA DE ROEDORES
+========================
+FUNCIONALIDADES:
+- Mostrar catálogo exclusivo de roedores disponibles para compra
+- Filtrar por precio y nombre
+- Agregar roedores al carrito (solo clientes registrados)
+- Información detallada de cada roedor (raza, edad, tamaño)
+- Diseño responsive con gradiente temático marrón/naranja
+-->
+
+<div class="container-fluid" style="background: linear-gradient(135deg, #8B4513 0%, #DEB887 100%); min-height: 100vh; padding: 2rem 0;">
+  <div class="container">
+    <!-- 🎨 ENCABEZADO CON DISEÑO TEMÁTICO -->
+    <div class="row mb-4">
+      <div class="col-12 text-center">
+        <div class="bg-white rounded-4 shadow-lg p-4 mx-auto" style="max-width: 600px;">
+          <h1 class="display-4 mb-2" style="color: #8B4513; font-weight: bold;">
+            🐹 Roedores
+          </h1>
+          <p class="lead text-muted mb-0">
+            Adorables compañeros de sangre caliente:
+            hámsters, chinchillas, jerbos y más mascotas pequeñas.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔧 CONTROLES DE FILTRADO -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="bg-white rounded-3 shadow p-3">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h5 class="mb-2 mb-md-0">🐹 Roedores Disponibles <span class="badge bg-warning text-dark">{{ productos.length }}</span></h5>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-center gap-2">
+                <label for="filtroOrden" class="form-label mb-0 text-nowrap">Ordenar:</label>
+                <select class="form-select" id="filtroOrden" [(ngModel)]="filtroOrden" (change)="onFiltroChange()">
+                  <option value="nombre">Nombre A-Z</option>
+                  <option value="precio-asc">Precio: Menor a Mayor</option>
+                  <option value="precio-desc">Precio: Mayor a Menor</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🐹 GRID DE PRODUCTOS DE ROEDORES -->
+    <div class="row g-4" *ngIf="productosFiltrados.length > 0; else noProductos">
+      <div class="col-lg-4 col-md-6" *ngFor="let producto of productosFiltrados">
+        <div class="card h-100 shadow-sm border-0 roedor-card">
+          <div class="position-relative">
+            <img [src]="producto.imagen" class="card-img-top" alt="{{ producto.nombre }}" style="height: 250px; object-fit: cover;">
+            <div class="position-absolute top-0 end-0 m-2">
+              <span class="badge" style="background-color: #8B4513;">Stock: {{ producto.stock }}</span>
+            </div>
+          </div>
+
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title text-truncate" style="color: #8B4513;">{{ producto.nombre }}</h5>
+            <p class="card-text text-muted flex-grow-1">{{ producto.descripcion }}</p>
+
+            <!-- 📋 Información específica de roedores -->
+            <div class="mb-3">
+              <small class="text-muted">
+                <div><strong>Información:</strong> {{ producto.descripcion }}</div>
+              </small>
+            </div>
+
+            <!-- 💰 Precio y botón de compra -->
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <div>
+                <span class="h4 text-success mb-0">€{{ producto.precio }}</span>
+                <small class="text-muted d-block">Precio de compra</small>
+              </div>
+              <button class="btn btn-outline-warning btn-sm" *ngIf="puedeAgregarAlCarrito()" (click)="agregarAlCarrito(producto)">Comprar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📭 MENSAJE CUANDO NO HAY PRODUCTOS -->
+    <ng-template #noProductos>
+      <div class="row">
+        <div class="col-12">
+          <div class="bg-white rounded-3 shadow p-5 text-center">
+            <div class="mb-4">
+              <i class="fas fa-search" style="font-size: 3rem; color: #8B4513; opacity: 0.5;"></i>
+            </div>
+            <h3 style="color: #8B4513;">No hay roedores disponibles</h3>
+            <p class="text-muted">Actualmente no tenemos roedores en stock. ¡Vuelve pronto!</p>
+            <button class="btn btn-outline-secondary" routerLink="/mascotas">
+              <i class="fas fa-arrow-left me-2"></i>Volver a Mascotas
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <!-- 📞 SECCIÓN INFORMATIVA -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="bg-white rounded-3 shadow p-4">
+          <div class="row">
+            <div class="col-md-4 text-center mb-3 mb-md-0">
+              <i class="fas fa-heart" style="font-size: 2rem; color: #8B4513; margin-bottom: 1rem;"></i>
+              <h5>Cuidado Especializado</h5>
+              <p class="text-muted">Asesoramiento para el cuidado de roedores</p>
+            </div>
+            <div class="col-md-4 text-center mb-3 mb-md-0">
+              <i class="fas fa-home" style="font-size: 2rem; color: #8B4513; margin-bottom: 1rem;"></i>
+              <h5>Habitat Adecuado</h5>
+              <p class="text-muted">Jaulas y accesorios específicos para roedores</p>
+            </div>
+            <div class="col-md-4 text-center">
+              <i class="fas fa-headset" style="font-size: 2rem; color: #8B4513; margin-bottom: 1rem;"></i>
+              <h5>Soporte Post-Compra</h5>
+              <p class="text-muted">Ayuda continua para el bienestar de tu roedor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

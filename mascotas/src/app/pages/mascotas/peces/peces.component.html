@@ -39,7 +39,7 @@
             <span class="h4 text-info fw-bold">${{ producto.precio }}</span>
             <div class="btn-group">
               <button class="btn btn-outline-info btn-sm" [routerLink]="['/producto', producto.id]">Ver</button>
-              <button class="btn btn-info btn-sm" *ngIf="puedeAgregarAlCarrito()" (click)="agregarAlCarrito(producto)">Adoptar</button>
+              <button class="btn btn-info btn-sm" *ngIf="puedeAgregarAlCarrito()" (click)="agregarAlCarrito(producto)">Comprar</button>
             </div>
           </div>
         </div>

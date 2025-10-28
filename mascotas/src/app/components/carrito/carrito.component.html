@@ -193,6 +193,189 @@
   </div>
 </div>
 
+<!-- Modal de Selección de Método de Pago -->
+<div *ngIf="mostrarFormularioPago" class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-credit-card me-2 text-primary"></i>
+          Seleccionar Método de Pago
+        </h5>
+        <button type="button" class="btn-close" (click)="cancelarCompra()"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Resumen del pedido -->
+        <div class="alert alert-info mb-4" role="alert">
+          <h6><i class="fas fa-shopping-bag me-2"></i>Resumen de tu pedido:</h6>
+          <ul class="list-unstyled mb-2">
+            <li *ngFor="let item of carrito.items">
+              {{ item.cantidad }}x {{ item.producto.nombre }} - ${{ item.subtotal }}
+            </li>
+          </ul>
+          <hr class="my-2">
+          <strong>Total a pagar: ${{ carrito.total }}</strong>
+        </div>
+
+        <!-- Selección de método de pago -->
+        <div class="mb-4">
+          <h6 class="mb-3">
+            <i class="fas fa-money-bill-wave me-2"></i>
+            ¿Cómo deseas pagar?
+          </h6>
+
+          <div class="row g-3">
+            <!-- Opción Efectivo -->
+            <div class="col-md-6">
+              <div class="card payment-option"
+                   [class.border-success]="metodoPagoSeleccionado === MetodoPago.EFECTIVO"
+                   (click)="seleccionarMetodoPago(MetodoPago.EFECTIVO)"
+                   style="cursor: pointer;">
+                <div class="card-body text-center">
+                  <i class="fas fa-money-bill-wave fa-3x text-success mb-3"></i>
+                  <h5 class="card-title">Pago en Efectivo</h5>
+                  <p class="card-text text-muted">Pago contra entrega</p>
+                  <small class="text-success">Sin comisiones adicionales</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Opción Tarjeta -->
+            <div class="col-md-6">
+              <div class="card payment-option"
+                   [class.border-primary]="metodoPagoSeleccionado === MetodoPago.TARJETA"
+                   (click)="seleccionarMetodoPago(MetodoPago.TARJETA)"
+                   style="cursor: pointer;">
+                <div class="card-body text-center">
+                  <i class="fas fa-credit-card fa-3x text-primary mb-3"></i>
+                  <h5 class="card-title">Pago con Tarjeta</h5>
+                  <p class="card-text text-muted">Débito o Crédito</p>
+                  <small class="text-primary">Pago inmediato y seguro</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario para Efectivo -->
+        <div *ngIf="metodoPagoSeleccionado === MetodoPago.EFECTIVO" class="card border-success">
+          <div class="card-header bg-success text-white">
+            <h6 class="mb-0">
+              <i class="fas fa-truck me-2"></i>
+              Datos para la entrega
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="direccionEntrega" class="form-label">
+                <i class="fas fa-map-marker-alt me-2"></i>Dirección de entrega *
+              </label>
+              <input type="text"
+                     class="form-control"
+                     id="direccionEntrega"
+                     [(ngModel)]="datosPago.direccionEntrega"
+                     placeholder="Ingresa tu dirección completa"
+                     required>
+            </div>
+            <div class="mb-3">
+              <label for="telefonoContacto" class="form-label">
+                <i class="fas fa-phone me-2"></i>Teléfono de contacto *
+              </label>
+              <input type="tel"
+                     class="form-control"
+                     id="telefonoContacto"
+                     [(ngModel)]="datosPago.telefonoContacto"
+                     placeholder="Ingresa tu número de teléfono"
+                     required>
+            </div>
+            <div class="alert alert-success" role="alert">
+              <small>
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Pago contra entrega:</strong> Pagarás en efectivo cuando recibas tu pedido.
+                Te contactaremos para coordinar la entrega.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario para Tarjeta -->
+        <div *ngIf="metodoPagoSeleccionado === MetodoPago.TARJETA" class="card border-primary">
+          <div class="card-header bg-primary text-white">
+            <h6 class="mb-0">
+              <i class="fas fa-credit-card me-2"></i>
+              Datos de la tarjeta
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label for="numeroTarjeta" class="form-label">Número de tarjeta *</label>
+                <input type="text"
+                       class="form-control"
+                       id="numeroTarjeta"
+                       [(ngModel)]="datosPago.numeroTarjeta"
+                       placeholder="1234 5678 9012 3456"
+                       maxlength="19"
+                       required>
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="nombreTitular" class="form-label">Nombre del titular *</label>
+                <input type="text"
+                       class="form-control"
+                       id="nombreTitular"
+                       [(ngModel)]="datosPago.nombreTitular"
+                       placeholder="Nombre como aparece en la tarjeta"
+                       required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="fechaVencimiento" class="form-label">Vencimiento *</label>
+                <input type="text"
+                       class="form-control"
+                       id="fechaVencimiento"
+                       [(ngModel)]="datosPago.fechaVencimiento"
+                       placeholder="MM/AA"
+                       maxlength="5"
+                       required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="cvv" class="form-label">CVV *</label>
+                <input type="password"
+                       class="form-control"
+                       id="cvv"
+                       [(ngModel)]="datosPago.cvv"
+                       placeholder="123"
+                       maxlength="4"
+                       required>
+              </div>
+            </div>
+            <div class="alert alert-primary" role="alert">
+              <small>
+                <i class="fas fa-shield-alt me-2"></i>
+                <strong>Pago seguro:</strong> Todos tus datos están protegidos con encriptación SSL.
+                No guardamos información de tarjetas de crédito.
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancelarCompra()">
+          <i class="fas fa-times me-2"></i>Cancelar
+        </button>
+        <button type="button"
+                class="btn"
+                [class.btn-success]="metodoPagoSeleccionado === MetodoPago.EFECTIVO"
+                [class.btn-primary]="metodoPagoSeleccionado === MetodoPago.TARJETA"
+                (click)="continuarConPago()"
+                [disabled]="!metodoPagoSeleccionado">
+          <i class="fas fa-arrow-right me-2"></i>
+          Continuar con {{ metodoPagoSeleccionado === MetodoPago.EFECTIVO ? 'Efectivo' : 'Tarjeta' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal de Confirmación de Compra -->
 <div *ngIf="mostrarResumenCompra" class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
   <div class="modal-dialog modal-lg">
@@ -216,14 +399,39 @@
           <strong>Total a pagar: ${{ carrito.total }}</strong>
         </div>
 
-        <p>¿Confirmas que deseas realizar esta compra?</p>
+        <!-- Mostrar método de pago seleccionado -->
+        <div class="alert alert-info" role="alert">
+          <h6>
+            <i [class]="metodoPagoSeleccionado === MetodoPago.EFECTIVO ? 'fas fa-money-bill-wave' : 'fas fa-credit-card'"
+               class="me-2"></i>
+            Método de pago seleccionado:
+          </h6>
+          <div *ngIf="metodoPagoSeleccionado === MetodoPago.EFECTIVO">
+            <strong>💵 Pago en Efectivo (Contra entrega)</strong><br>
+            <small>Dirección: {{ datosPago.direccionEntrega }}</small><br>
+            <small>Teléfono: {{ datosPago.telefonoContacto }}</small>
+          </div>
+          <div *ngIf="metodoPagoSeleccionado === MetodoPago.TARJETA">
+            <strong>💳 Pago con Tarjeta</strong><br>
+            <small>Tarjeta: ****-****-****-{{ datosPago.numeroTarjeta?.slice(-4) }}</small><br>
+            <small>Titular: {{ datosPago.nombreTitular }}</small>
+          </div>
+        </div>
+
+        <p><strong>¿Confirmas que deseas realizar esta compra?</strong></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="cancelarCompra()">
           <i class="fas fa-times me-2"></i>Cancelar
         </button>
-        <button type="button" class="btn btn-success" (click)="confirmarCompra()">
-          <i class="fas fa-credit-card me-2"></i>Confirmar Compra
+        <button type="button"
+                class="btn"
+                [class.btn-success]="metodoPagoSeleccionado === MetodoPago.EFECTIVO"
+                [class.btn-primary]="metodoPagoSeleccionado === MetodoPago.TARJETA"
+                (click)="confirmarCompra()">
+          <i [class]="metodoPagoSeleccionado === MetodoPago.EFECTIVO ? 'fas fa-money-bill-wave' : 'fas fa-credit-card'"
+             class="me-2"></i>
+          Confirmar Compra {{ metodoPagoSeleccionado === MetodoPago.EFECTIVO ? 'en Efectivo' : 'con Tarjeta' }}
         </button>
       </div>
     </div>

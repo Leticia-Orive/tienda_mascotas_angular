@@ -13,6 +13,7 @@ import { GatosComponent } from './pages/mascotas/gatos/gatos.component';
 import { ConejosComponent } from './pages/mascotas/conejos/conejos.component';
 import { PecesComponent } from './pages/mascotas/peces/peces.component';
 import { IguanasComponent } from './pages/mascotas/iguanas/iguanas.component';
+import { RoedoresComponent } from './pages/mascotas/roedores/roedores.component';
 import { AvesComponent } from './pages/mascotas/aves/aves.component';
 import { AlimentacionComponent } from './pages/alimentacion/alimentacion.component';
 import { AccesoriosComponent } from './pages/accesorios/accesorios.component';
@@ -30,6 +31,7 @@ export const routes: Routes = [
   { path: 'mascotas/conejos', component: ConejosComponent },
   { path: 'mascotas/peces', component: PecesComponent },
   { path: 'mascotas/iguanas', component: IguanasComponent },
+  { path: 'mascotas/roedores', component: RoedoresComponent },
   { path: 'mascotas/aves', component: AvesComponent },
   { path: 'alimentacion', component: AlimentacionComponent },
   { path: 'accesorios', component: AccesoriosComponent },

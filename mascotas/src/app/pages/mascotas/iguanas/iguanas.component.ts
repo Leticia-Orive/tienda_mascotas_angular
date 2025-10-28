@@ -1,3 +1,18 @@
+/**
+ * 🦎 COMPONENTE REPTILES Y TORTUGAS
+ *
+ * PROPÓSITO:
+ * - Mostrar productos de reptiles: iguanas, geckos y tortugas
+ * - Filtrar por múltiples tipos de reptiles y especies
+ * - Permitir compra de mascotas exóticas
+ *
+ * TIPOS DE ANIMALES INCLUIDOS:
+ * - 🦎 Iguanas (terrestres)
+ * - 🦎 Geckos (pequeños reptiles)
+ * - 🐢 Tortugas terrestres (Testudo spp.)
+ * - 🐢 Tortugas acuáticas (Trachemys spp.)
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -33,11 +48,17 @@ export class IguanasComponent implements OnInit {
         return nombre.includes('iguana') ||
                nombre.includes('reptil') ||
                nombre.includes('gecko') ||
+               nombre.includes('tortuga') ||
                descripcion.includes('iguana') ||
                descripcion.includes('reptil') ||
                descripcion.includes('gecko') ||
+               descripcion.includes('tortuga') ||
+               descripcion.includes('acuática') ||
+               descripcion.includes('terrestre') ||
                raza.includes('iguana') ||
-               raza.includes('gecko');
+               raza.includes('gecko') ||
+               raza.includes('testudo') ||
+               raza.includes('trachemys');
       });
       this.aplicarFiltros();
     });
